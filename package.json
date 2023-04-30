@@ -1,8 +1,8 @@
 {
-  "name": "use-mapbox-gl-js-with-react",
-  "version": "0.2.0",
+  "name": "morimotolab-digital-city",
+  "version": "0.5.0",
   "private": true,
-  "description": " ", 
+  "description": " ",
   "dependencies": {
     "mapbox-gl": "^2.14.1",
     "react": "^18.2.0",
@@ -10,6 +10,10 @@
     "react-scripts": "^5.0.1",
     "@turf/turf": "^6.5.0",
     "deck.gl": "^8.9.12"
+  },
+  "devDependencies": {
+    "eslint": "^8.39.0",
+    "eslint-plugin-react": "^7.32.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -36,10 +40,17 @@
       "last 1 safari version"
     ]
   },
-  "author": "Yoshida Hinata",
+  "files": [
+    "src/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "Hinata Yoshida",
   "license": "MIT",
-  "devDependencies": {
-    "eslint": "^8.39.0",
-    "eslint-plugin-react": "^7.32.2"
-  }
+  "bugs": {
+    "url": ""
+  },
+  "homepage": ""
 }
