@@ -71,21 +71,23 @@ const buildingLayer = {
 
 // 宇都宮市のLOD1建物
 // https://deck.gl/docs/api-reference/geo-layers/tile-3d-layer
+// https://github.com/Project-PLATEAU/plateau-streaming-tutorial/blob/main/3d-tiles/plateau-3dtiles-streaming.md
 const tile3dLayer = new MapboxLayer({
     id: 'tile3dlayer',
     type: Tile3DLayer,
     pointSize: 1,
     //data: 'https://assets.cms.plateau.reearth.io/assets/d2/7214a9-e4a1-427f-8d02-9abfbff75e05/09201_utsunomiya-shi_2020_3dtiles_3_op_bldg_lod1/tileset.json',
-    data: "https://assets.cms.plateau.reearth.io/assets/1f/45fa88-ab0e-45b8-bf59-61ef54d7a723/09201_utsunomiya-shi_2020_3dtiles_3_op_bldg_lod2/tileset.json",
+    data: 'https://assets.cms.plateau.reearth.io/assets/9a/161408-d44f-427a-b296-c1f3c58669a7/09201_utsunomiya-shi_2020_3dtiles_3_op_bldg_lod2_no_texture/tileset.json',
+    //data: "https://assets.cms.plateau.reearth.io/assets/1f/45fa88-ab0e-45b8-bf59-61ef54d7a723/09201_utsunomiya-shi_2020_3dtiles_3_op_bldg_lod2/tileset.json",
     loader: Tiles3DLoader
 });
 
 var BuildingVisibilityFlag = true;
 
+var map;
 
 const Map = () => {
     const mapContainer = useRef(null);
-    const map = useRef(null);
     const [mapLoadedFlag, setMapLoadedFlag] = useState(false)
 
     const reqIdRef = useRef(); // アニメーションの管理ID
@@ -97,46 +99,46 @@ const Map = () => {
     // HTMLページのDOMツリーにアプリが挿入された直後に呼び出されます。
     useEffect(() => {
         // MapBoxの初期化
-        map.current = new mapboxgl.Map({
+        map = new mapboxgl.Map({
             container: mapContainer.current,
             style: 'mapbox://styles/mapbox/light-v10',//'mapbox://styles/mapbox/satellite-streets-v12',// 
             center: [lng, lat],
             zoom: zoom
         });
         // 地図のコントロールを追加
-        map.current.addControl(
+        map.addControl(
             new mapboxgl.NavigationControl()
         );
         // 縮尺を追加
-        map.current.addControl(new mapboxgl.ScaleControl({
+        map.addControl(new mapboxgl.ScaleControl({
             maxWidth: 250,
             unit: 'metric'
         }));
 
-        map.current.on("load", () => {
+        map.on("load", () => {
             // GeoJsonデータの登録
             // addSource：
             //  第1引数：ID
             //  第2引数：詳細
 
             // LRTの路線
-            map.current.addSource("lrt_route", {
+            map.addSource("lrt_route", {
                 type: "geojson",
                 data: lrt_route_geojson
             });
             // LRTのバス停
-            map.current.addSource("lrt_stop", {
+            map.addSource("lrt_stop", {
                 type: "geojson",
                 data: lrt_stop_geojson
             });
             // 250mメッシュ
-            map.current.addSource("population_2020", {
+            map.addSource("population_2020", {
                 type: "geojson",
                 data: population_2020_geojson
             });
 
             // 地形情報
-            map.current.addSource('mapbox-dem', {
+            map.addSource('mapbox-dem', {
                 'type': 'raster-dem',
                 'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
                 'tileSize': 512,
@@ -148,7 +150,7 @@ const Map = () => {
             // 一番最初に読み込まないと、他のレイヤに重なっちゃいます。
             // 本家の解説：https://github.com/Project-PLATEAU/plateau-streaming-tutorial/blob/main/terrain/plateau-terrain-streaming.md
             // ただデータがない場所を読み込む必要がある場合には、コンソールログにエラーが大量に発生します。
-            map.current.addSource("plateau_tile", {
+            map.addSource("plateau_tile", {
                 "type": "raster",
                 "tiles": [
                     "https://gic-plateau.s3.ap-northeast-1.amazonaws.com/2020/ortho/tiles/{z}/{x}/{y}.png"
@@ -157,19 +159,19 @@ const Map = () => {
                 minzoom: 10,
                 attribution: '<a href="https://www.mlit.go.jp/plateau/">国土交通省Project PLATEAU</a>'
             })
-            map.current.addLayer({
+            map.addLayer({
                 "id": "plateau_tile",
                 "type": "raster",
                 "source": "plateau_tile",
                 minzoom: 14,
             });
 
-            map.current.addSource("point", {
+            map.addSource("point", {
                 type: "geojson",
                 data: point
             });
 
-            map.current.addLayer({
+            map.addLayer({
                 id: "lrt_route",
                 type: "line",
                 source: "lrt_route",
@@ -179,7 +181,7 @@ const Map = () => {
                 }
             })
 
-            map.current.addLayer({
+            map.addLayer({
                 id: "lrt_stop",
                 type: "circle",
                 source: "lrt_stop",
@@ -193,7 +195,7 @@ const Map = () => {
                 }
             })
 
-            map.current.addLayer({
+            map.addLayer({
                 id: "point",
                 type: "circle",
                 source: "point",
@@ -206,7 +208,7 @@ const Map = () => {
                 }
             })
 
-            map.current.addLayer({
+            map.addLayer({
                 id: "population_2020",
                 type: "fill",
                 source: "population_2020",
@@ -221,12 +223,12 @@ const Map = () => {
 
             /*
             for(let k in gtfs.shapes_linestring_dict){
-                map.current.addSource(k, {
+                map.addSource(k, {
                     type: "geojson",
                     data: gtfs.shapes_linestring_dict[k]
                 });
 
-                map.current.addLayer({
+                map.addLayer({
                     id: k,
                     type: "line",
                     source: k,
@@ -238,15 +240,15 @@ const Map = () => {
             } */
 
             // PlateauのLOD1建物
-            map.current.addLayer(tile3dLayer);
+            map.addLayer(tile3dLayer);
 
             // 建物情報を登録
-            map.current.addLayer(buildingLayer);
+            map.addLayer(buildingLayer);
             // 地形情報を登録
-            map.current.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1 });
+            map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1 });
 
             // 空の情報を登録
-            map.current.addLayer({
+            map.addLayer({
                 'id': 'sky',
                 'type': 'sky',
                 'paint': {
@@ -264,21 +266,21 @@ const Map = () => {
         });
 
         // Mapがユーザーによって動かされたとき、緯度経度を更新する。
-        map.current.on('move', () => {
-            setLng(map.current.getCenter().lng.toFixed(4));
-            setLat(map.current.getCenter().lat.toFixed(4));
-            setZoom(map.current.getZoom().toFixed(2));
+        map.on('move', () => {
+            setLng(map.getCenter().lng.toFixed(4));
+            setLat(map.getCenter().lat.toFixed(4));
+            setZoom(map.getZoom().toFixed(2));
         });
 
         return () => {
-            map.current.remove();   /* これの意味が分からない...消すとIDが重複しているってエラーが出る。 */
+            map.remove();   /* これの意味が分からない...消すとIDが重複しているってエラーが出る。 */
             /* 多分、React.StrictModeのせい */
         }
     }, []);
 
     const animate = () => {
         const [id, point] = fuga.animate();
-        map.current.getSource(id).setData(point);
+        map.getSource(id).setData(point);
 
         reqIdRef.current = requestAnimationFrame(animate);
     }
@@ -289,7 +291,7 @@ const Map = () => {
 
         BuildingVisibilityFlag = BuildingVisibilityFlag ? false : true;
         // レイヤの切り替え
-        map.current.setLayoutProperty(buildingLayer.id, 'visibility', BuildingVisibilityFlag? "visible" : "none");
+        map.setLayoutProperty(buildingLayer.id, 'visibility', BuildingVisibilityFlag ? "visible" : "none");
     }
 
     return (
