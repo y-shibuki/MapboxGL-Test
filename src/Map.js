@@ -8,7 +8,9 @@ import { MapboxLayer } from "@deck.gl/mapbox"
 import "css/Map.css";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLayerGroup, faBuilding } from '@fortawesome/free-solid-svg-icons';
+import { faLayerGroup, faBuilding, faXmark } from '@fortawesome/free-solid-svg-icons';
+
+import Modal from 'components/Modal';
 
 import { hoge } from "distance"
 import { Fuga } from "fuga"
@@ -17,8 +19,6 @@ import { graduated_colors, graduated_option } from 'utils/graduated_colors';
 import Color from 'utils/Color'
 
 import { Building } from 'Building';
-
-import BuildingVisibleButton from "components/Building_Visible_Button"
 
 // データの読み込み
 import lrt_route_geojson from "assets/LRT_route_single.geojson";
@@ -59,6 +59,8 @@ var map;
 const Map = () => {
     const mapContainer = useRef(null);
     const [mapLoadedFlag, setMapLoadedFlag] = useState(false)
+
+    const [isBuildingModalVisible, setBuildingModalVisibility] = useState(false)
 
     const reqIdRef = useRef(); // アニメーションの管理ID
 
@@ -115,7 +117,7 @@ const Map = () => {
                 'maxzoom': 14
             });
 
-            
+
             // PLATEAUの地形画像を表示
             // 高解像度です。さすが国交省。
             // 一番最初に読み込まないと、他のレイヤに重なっちゃいます。
@@ -268,15 +270,19 @@ const Map = () => {
     return (
         <div>
             <div className='BasicButtonContainer'>
-                <div className='BasicButton' onClick={ToggleBuildingVisibility}>
+                <div className='BasicButton' onClick={() => setBuildingModalVisibility(true)}>
                     <span>3D建物</span>
-                    <FontAwesomeIcon icon={faBuilding} size="2x"/>
+                    <FontAwesomeIcon icon={faBuilding} size="2x" />
                 </div>
                 <div className='BasicButton'>
-                    <span>レイヤ<br/>切り替え</span>
-                    <FontAwesomeIcon icon={faLayerGroup} size="2x"/>
+                    <span>レイヤ<br />切り替え</span>
+                    <FontAwesomeIcon icon={faLayerGroup} size="2x" />
                 </div>
             </div>
+
+            <Modal isOpen={isBuildingModalVisible} setShow={setBuildingModalVisibility}>
+                <p>これがモーダルウィンドウです。</p>
+            </Modal>
 
             <div className="sidebar">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
