@@ -26,9 +26,9 @@
   position: absolute;
   top: 0;
   right: 0;
-  margin-top: 12px;
-  margin-right: 52px;
-  z-index: 1; /* 前面に表示 */
+  margin: 12px;
+  z-index: 1;
+  /* 前面に表示 */
   /* デザイン */
   width: 70px;
   height: 70px;
@@ -38,4 +38,54 @@
 }
 .Building_Visible_Button:hover {
   fill: rgba(35, 55, 75, 0.9);
+}
+
+/* ボタン */
+.BasicButtonContainer {
+  /* 表示場所 */
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 12px;
+  margin-right: 50px;
+  z-index: 2;
+  /* 前面に表示 */
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+}
+
+.BasicButton {
+  width: 70px;
+  height: 70px;
+  margin-bottom: 5px;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  /* ボタンっぽく */
+  cursor: pointer;
+  border: 2px solid rgba(35, 55, 75, 0.9);
+  border-radius: 4px;
+  background-color: rgba(35, 55, 75, 0.9);
+  color: white;
+  transition: background 0.3s;
+  padding-bottom: 4px;
+  /* カーソルを当てた時 */
+}
+.BasicButton span {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-size: 15px;
+  line-height: 16px;
+}
+.BasicButton svg {
+  margin-top: auto;
+}
+.BasicButton:hover {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: rgba(35, 55, 75, 0.9);
 }/*# sourceMappingURL=Map.css.map */

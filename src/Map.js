@@ -7,6 +7,9 @@ import { MapboxLayer } from "@deck.gl/mapbox"
 
 import "css/Map.css";
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLayerGroup, faBuilding } from '@fortawesome/free-solid-svg-icons';
+
 import { hoge } from "distance"
 import { Fuga } from "fuga"
 import { GTFS } from 'utils/gtfs';
@@ -264,7 +267,17 @@ const Map = () => {
 
     return (
         <div>
-            <BuildingVisibleButton onClick={ToggleBuildingVisibility} />
+            <div className='BasicButtonContainer'>
+                <div className='BasicButton' onClick={ToggleBuildingVisibility}>
+                    <span>3D建物</span>
+                    <FontAwesomeIcon icon={faBuilding} size="2x"/>
+                </div>
+                <div className='BasicButton'>
+                    <span>レイヤ<br/>切り替え</span>
+                    <FontAwesomeIcon icon={faLayerGroup} size="2x"/>
+                </div>
+            </div>
+
             <div className="sidebar">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
