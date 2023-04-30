@@ -21,7 +21,7 @@
 }
 
 
-/* ボタン */
+/** ボタン **/
 .BasicButtonContainer {
     /* 表示場所 */
     position: absolute;
@@ -94,6 +94,7 @@
     align-items: center;
     justify-content: center;
 
+    /* モーダルウィンドウのコンテンツ */
     div {
         z-index: 3;
 
@@ -105,6 +106,7 @@
         width: 50%;
         padding: 1em;
 
+        /* 閉じるボタン */
         svg {
             position: absolute;
             top: 10px;

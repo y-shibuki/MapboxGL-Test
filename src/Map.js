@@ -18,7 +18,7 @@ import { GTFS } from 'utils/gtfs';
 import { graduated_colors, graduated_option } from 'utils/graduated_colors';
 import Color from 'utils/Color'
 
-import { Building } from 'Building';
+import { Building, BuildingLayerModal } from 'Building';
 
 // データの読み込み
 import lrt_route_geojson from "assets/LRT_route_single.geojson";
@@ -58,9 +58,9 @@ var map;
 
 const Map = () => {
     const mapContainer = useRef(null);
-    const [mapLoadedFlag, setMapLoadedFlag] = useState(false)
+    const [mapLoadedFlag, setMapLoadedFlag] = useState(false);
 
-    const [isBuildingModalVisible, setBuildingModalVisibility] = useState(false)
+    const [isBuildingModalVisible, setBuildingModalVisibility] = useState(false);
 
     const reqIdRef = useRef(); // アニメーションの管理ID
 
@@ -281,7 +281,7 @@ const Map = () => {
             </div>
 
             <Modal isOpen={isBuildingModalVisible} setShow={setBuildingModalVisibility}>
-                <p>これがモーダルウィンドウです。</p>
+                <BuildingLayerModal visibleLayerID={building.visibleLayerID} />
             </Modal>
 
             <div className="sidebar">

@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+
 import { MapboxLayer } from "@deck.gl/mapbox"
 import { Tile3DLayer } from '@deck.gl/geo-layers';
 import { Tiles3DLoader } from '@loaders.gl/3d-tiles';
@@ -51,6 +53,25 @@ const buildingLayer = {
     })
 };
 
+const radioButtons = [
+    {
+        label: "LOD1 建物モデル（MapboxGL）",
+        value: "3d-buildings-MapboxGL"
+    },
+    {
+        label: "LOD1 建物モデル（Project PLATEAU）",
+        value: "3d-buildings-PLATEAU_LOD1"
+    },
+    {
+        label: "LOD2 建物モデル（Project PLATEAU）",
+        value: "3d-buildings-PLATEAU_LOD2"
+    },
+    {
+        label: "LOD2 建物モデル-テクスチャ無し-（Project PLATEAU）",
+        value: "3d-buildings-PLATEAU_LOD2_notexture"
+    }
+];
+
 // 建物のレイヤを管理するクラス
 // このクラスで、データの読み込み・表示・切り替えを行うことが可能
 export class Building {
@@ -64,18 +85,47 @@ export class Building {
         const me = this;
         me.map = map;
 
-        for(let key in buildingLayer){
+        for (let key in buildingLayer) {
             map.addLayer(buildingLayer[key]);
             map.setLayoutProperty(key, 'visibility', key === me.visibleLayerID ? "visible" : "none");
         };
     }
 
     toggleVisibility(layerID) {
-        const me = this, {map} = me;
+        const me = this, { map } = me;
         me.visibleLayerID = layerID;
 
-        for(let key in buildingLayer){
+        for (let key in buildingLayer) {
             map.setLayoutProperty(key, 'visibility', key === me.visibleLayerID ? "visible" : "none");
         };
     }
 };
+
+export const BuildingLayerModal = ({visibleLayerID}) => {
+    const [selected, setSelected] = useState(visibleLayerID);
+
+    const changeValue = (e) => {
+        setSelected(e.target.value);
+    };
+
+    return (
+        <>
+            <p>これがモーダルウィンドウです。</p>
+            <div>
+                <div>
+                    {radioButtons.map(radio => {
+                        return (
+                            <div key={radio.value}>
+                                <input type="radio" name="building-layers"
+                                    value={radio.value} checked={radio.value === selected} onChange={changeValue} />
+                                <label>
+                                    <span>{radio.label}</span>
+                                </label>
+                            </div>
+                        )
+                    })}
+                </div>
+            </div>
+        </>
+    )
+}
