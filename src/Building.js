@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-
 import { MapboxLayer } from "@deck.gl/mapbox"
 import { Tile3DLayer } from '@deck.gl/geo-layers';
 import { Tiles3DLoader } from '@loaders.gl/3d-tiles';
@@ -55,6 +53,10 @@ const buildingLayer = {
 
 const radioButtons = [
     {
+        label: "非表示",
+        value: "null"
+    },
+    {
         label: "LOD1 建物モデル（MapboxGL）",
         value: "3d-buildings-MapboxGL"
     },
@@ -101,31 +103,24 @@ export class Building {
     }
 };
 
-export const BuildingLayerModal = ({visibleLayerID}) => {
-    const [selected, setSelected] = useState(visibleLayerID);
-
+export const BuildingLayerModal = ({ visibleLayerID, setVisibleLayerID }) => {
     const changeValue = (e) => {
-        setSelected(e.target.value);
+        setVisibleLayerID(e.target.value);
     };
 
     return (
-        <>
-            <p>これがモーダルウィンドウです。</p>
-            <div>
-                <div>
-                    {radioButtons.map(radio => {
-                        return (
-                            <div key={radio.value}>
-                                <input type="radio" name="building-layers"
-                                    value={radio.value} checked={radio.value === selected} onChange={changeValue} />
-                                <label>
-                                    <span>{radio.label}</span>
-                                </label>
-                            </div>
-                        )
-                    })}
-                </div>
-            </div>
-        </>
+        <fieldset className="BuilidingLayers_RadioButtonContainer">
+            {radioButtons.map(radio => {
+                return (
+                    <div key={radio.value}>
+                        <input id={radio.value} type="radio" name="building-layers"
+                            value={radio.value} checked={radio.value === visibleLayerID} onChange={changeValue} className="visually-hidden"/>
+                        <label htmlFor={radio.value}>
+                            <span>{radio.label}</span>
+                        </label>
+                    </div>
+                )
+            })}
+        </fieldset>
     )
 }

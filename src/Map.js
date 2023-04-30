@@ -61,6 +61,7 @@ const Map = () => {
     const [mapLoadedFlag, setMapLoadedFlag] = useState(false);
 
     const [isBuildingModalVisible, setBuildingModalVisibility] = useState(false);
+    const [visibleBuildingLayerID, setVisibleBuildingLayerID] = useState("3d-buildings-MapboxGL")
 
     const reqIdRef = useRef(); // アニメーションの管理ID
 
@@ -258,14 +259,12 @@ const Map = () => {
         reqIdRef.current = requestAnimationFrame(animate);
     }
 
-    const ToggleBuildingVisibility = () => {
-        // Mapが読み込まれていなかったら実行しない
+    useEffect(() => {
         if (!mapLoadedFlag) return;
 
-        BuildingVisibilityFlag = BuildingVisibilityFlag ? false : true;
-        // レイヤの切り替え
-        building.toggleVisibility(BuildingVisibilityFlag ? "3d-buildings-MapboxGL" : "none");
-    }
+        building.toggleVisibility(visibleBuildingLayerID)
+    }, [mapLoadedFlag, visibleBuildingLayerID]);
+
 
     return (
         <div>
@@ -280,8 +279,8 @@ const Map = () => {
                 </div>
             </div>
 
-            <Modal isOpen={isBuildingModalVisible} setShow={setBuildingModalVisibility}>
-                <BuildingLayerModal visibleLayerID={building.visibleLayerID} />
+            <Modal Title={"レイヤー"} isOpen={isBuildingModalVisible} setShow={setBuildingModalVisibility}>
+                <BuildingLayerModal visibleLayerID={visibleBuildingLayerID} setVisibleLayerID={setVisibleBuildingLayerID} />
             </Modal>
 
             <div className="sidebar">
