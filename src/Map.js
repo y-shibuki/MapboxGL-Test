@@ -1,14 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 
-import { Tile3DLayer } from '@deck.gl/geo-layers';
-import { Tiles3DLoader } from '@loaders.gl/3d-tiles';
-import { MapboxLayer } from "@deck.gl/mapbox"
-
 import "css/Map.css";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLayerGroup, faBuilding, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faLayerGroup, faBuilding } from '@fortawesome/free-solid-svg-icons';
 
 import Modal from 'components/Modal';
 
@@ -51,8 +47,6 @@ const route = [[139.899260236867036, 36.559057305578094], [139.899215692827994, 
 const fuga = new Fuga(0.2, route, "point");
 
 const building = new Building();
-
-var BuildingVisibilityFlag = true;
 
 var map;
 
@@ -259,6 +253,7 @@ const Map = () => {
         reqIdRef.current = requestAnimationFrame(animate);
     }
 
+    // 3D建物の表示切り替え
     useEffect(() => {
         if (!mapLoadedFlag) return;
 
