@@ -4,12 +4,17 @@
   "private": true,
   "description": " ",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-regular-svg-icons": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@turf/turf": "^6.5.0",
+    "deck.gl": "^8.9.12",
     "mapbox-gl": "^2.14.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1",
-    "@turf/turf": "^6.5.0",
-    "deck.gl": "^8.9.12"
+    "three": "^0.152.2"
   },
   "devDependencies": {
     "eslint": "^8.39.0",
@@ -40,9 +45,6 @@
       "last 1 safari version"
     ]
   },
-  "files": [
-    "src/"
-  ],
   "repository": {
     "type": "git",
     "url": ""
