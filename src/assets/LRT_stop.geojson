@@ -1,0 +1,26 @@
+{
+"type": "FeatureCollection",
+"name": "LRT_stop",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "fid": 1, "路線": "LRT", "駅": "JR宇都宮駅東口" }, "geometry": { "type": "Point", "coordinates": [ 139.899260215550754, 36.559057326989354, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 2, "路線": "LRT", "駅": "宿郷町" }, "geometry": { "type": "Point", "coordinates": [ 139.903532404179202, 36.558294709624278, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 3, "路線": "LRT", "駅": "東宿郷" }, "geometry": { "type": "Point", "coordinates": [ 139.907667264315023, 36.557968717494091, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 4, "路線": "LRT", "駅": "今泉町" }, "geometry": { "type": "Point", "coordinates": [ 139.915678932727559, 36.557541542776306, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 5, "路線": "LRT", "駅": "陽東" }, "geometry": { "type": "Point", "coordinates": [ 139.922741670851195, 36.557316622471696, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 6, "路線": "LRT", "駅": "ベルモール前" }, "geometry": { "type": "Point", "coordinates": [ 139.929734321163153, 36.55707746009233, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 7, "路線": "LRT", "駅": "平出町" }, "geometry": { "type": "Point", "coordinates": [ 139.939482400838102, 36.554976660818518, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 8, "路線": "LRT", "駅": "下平出" }, "geometry": { "type": "Point", "coordinates": [ 139.944875224758391, 36.554860965009844, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 9, "路線": "LRT", "駅": "下竹下" }, "geometry": { "type": "Point", "coordinates": [ 139.963477050307574, 36.548349945157895, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 10, "路線": "LRT", "駅": "作新学院北" }, "geometry": { "type": "Point", "coordinates": [ 139.976211701657661, 36.544980296125111, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 11, "路線": "LRT", "駅": "清原管理センター前" }, "geometry": { "type": "Point", "coordinates": [ 139.984405543869599, 36.547653725176673, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 12, "路線": "LRT", "駅": "清原工業団地北" }, "geometry": { "type": "Point", "coordinates": [ 139.983256799347288, 36.553839204681857, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 13, "路線": "LRT", "駅": "テクノポリス西" }, "geometry": { "type": "Point", "coordinates": [ 139.986772499640267, 36.567348059904518, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 14, "路線": "LRT", "駅": "テクノポリス中央" }, "geometry": { "type": "Point", "coordinates": [ 139.992443206804495, 36.567731470837074, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 15, "路線": "LRT", "駅": "テクノポリス東" }, "geometry": { "type": "Point", "coordinates": [ 139.998263369593786, 36.567579680306103, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 16, "路線": "LRT", "駅": "芳賀台" }, "geometry": { "type": "Point", "coordinates": [ 140.005928650745602, 36.566240638720544, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 17, "路線": "LRT", "駅": "管理センター前" }, "geometry": { "type": "Point", "coordinates": [ 140.011053605739022, 36.564815034027362, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 18, "路線": "LRT", "駅": "かしの森公園" }, "geometry": { "type": "Point", "coordinates": [ 140.014684100430998, 36.572176144606019, 0.0 ] } },
+{ "type": "Feature", "properties": { "fid": 19, "路線": "LRT", "駅": "本田技研北門" }, "geometry": { "type": "Point", "coordinates": [ 140.011931610883352, 36.578791645633878, 0.0 ] } }
+]
+}

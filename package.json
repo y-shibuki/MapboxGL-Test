@@ -1,0 +1,45 @@
+{
+  "name": "use-mapbox-gl-js-with-react",
+  "version": "0.2.0",
+  "private": true,
+  "description": " ", 
+  "dependencies": {
+    "mapbox-gl": "^2.14.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "@turf/turf": "^6.5.0",
+    "deck.gl": "^8.9.12"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
+      "not safari < 10",
+      "not chrome < 51",
+      "not android < 5",
+      "not ie < 12"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "author": "Yoshida Hinata",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.39.0",
+    "eslint-plugin-react": "^7.32.2"
+  }
+}

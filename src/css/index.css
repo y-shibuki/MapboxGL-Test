@@ -1,0 +1,17 @@
+body {
+    margin: 0;
+
+    font-family: "Helvetica Neue",
+        Arial,
+        "Hiragino Kaku Gothic ProN",
+        "Hiragino Sans",
+        "BIZ UDPGothic",
+        Meiryo,
+        sans-serif;
+
+    /* テキストのコピーを禁止 */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

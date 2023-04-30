@@ -1,0 +1,44 @@
+.map-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+
+.sidebar {
+    background-color: rgba(35, 55, 75, 0.9);
+    color: #fff;
+    padding: 6px 12px;
+    font-family: monospace;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 12px;
+    border-radius: 4px;
+}
+
+
+/* 3D建物の表示と非表示を切り替えるボタン */
+.Building_Visible_Button {
+    /* 表示場所 */
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 12px;
+    z-index: 1; /* 前面に表示 */
+
+    /* デザイン */
+    width: 70px;
+    height: 70px;
+    
+    /* ボタンっぽく */
+    cursor: pointer;
+
+    /* カーソルを当てた時 */
+    &:hover {
+        fill: rgba(35, 55, 75, 0.9)
+    }
+}
