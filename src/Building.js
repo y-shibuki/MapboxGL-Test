@@ -51,21 +51,31 @@ const buildingLayer = {
     })
 };
 
+// 建物のレイヤを管理するクラス
+// このクラスで、データの読み込み・表示・切り替えを行うことが可能
 export class Building {
     constructor() {
+        const me = this;
+
+        me.visibleLayerID = "3d-buildings-MapboxGL";
     }
 
     add(map) {
         const me = this;
         me.map = map;
 
-        buildingLayer.array.forEach(layer => {
-            me.map.addLayer(layer);
-        });
+        for(let key in buildingLayer){
+            map.addLayer(buildingLayer[key]);
+            map.setLayoutProperty(key, 'visibility', key === me.visibleLayerID ? "visible" : "none");
+        };
     }
 
-    toggleVisibility() {
+    toggleVisibility(layerID) {
         const me = this, {map} = me;
-        map.setLayoutProperty("3d-buildings-MapboxGL", 'visibility', "none");
+        me.visibleLayerID = layerID;
+
+        for(let key in buildingLayer){
+            map.setLayoutProperty(key, 'visibility', key === me.visibleLayerID ? "visible" : "none");
+        };
     }
 };

@@ -13,6 +13,8 @@ import { GTFS } from 'utils/gtfs';
 import { graduated_colors, graduated_option } from 'utils/graduated_colors';
 import Color from 'utils/Color'
 
+import { Building } from 'Building';
+
 import BuildingVisibleButton from "components/Building_Visible_Button"
 
 // データの読み込み
@@ -45,42 +47,7 @@ const route = [[139.899260236867036, 36.559057305578094], [139.899215692827994, 
 
 const fuga = new Fuga(0.2, route, "point");
 
-// 建物レイヤ
-const buildingLayer = {
-    "id": "3d-buildings",
-    "source": "composite",
-    "source-layer": "building",
-    "filter": ["==", "extrude", "true"],
-    "type": "fill-extrusion",
-    "minzoom": 8,
-    "paint": {
-        "fill-extrusion-color": "#aaa",
-        "fill-extrusion-height": [
-            "interpolate", ["linear"], ["zoom"],
-            8, 0,
-            14.05, ["get", "height"]
-        ],
-        "fill-extrusion-base": [
-            "interpolate", ["linear"], ["zoom"],
-            8, 0,
-            14.05, ["get", "min_height"]
-        ],
-        "fill-extrusion-opacity": 0.8
-    }
-};
-
-// 宇都宮市のLOD1建物
-// https://deck.gl/docs/api-reference/geo-layers/tile-3d-layer
-// https://github.com/Project-PLATEAU/plateau-streaming-tutorial/blob/main/3d-tiles/plateau-3dtiles-streaming.md
-const tile3dLayer = new MapboxLayer({
-    id: 'tile3dlayer',
-    type: Tile3DLayer,
-    pointSize: 1,
-    //data: 'https://assets.cms.plateau.reearth.io/assets/d2/7214a9-e4a1-427f-8d02-9abfbff75e05/09201_utsunomiya-shi_2020_3dtiles_3_op_bldg_lod1/tileset.json',
-    data: 'https://assets.cms.plateau.reearth.io/assets/9a/161408-d44f-427a-b296-c1f3c58669a7/09201_utsunomiya-shi_2020_3dtiles_3_op_bldg_lod2_no_texture/tileset.json',
-    //data: "https://assets.cms.plateau.reearth.io/assets/1f/45fa88-ab0e-45b8-bf59-61ef54d7a723/09201_utsunomiya-shi_2020_3dtiles_3_op_bldg_lod2/tileset.json",
-    loader: Tiles3DLoader
-});
+const building = new Building();
 
 var BuildingVisibilityFlag = true;
 
@@ -145,6 +112,7 @@ const Map = () => {
                 'maxzoom': 14
             });
 
+            
             // PLATEAUの地形画像を表示
             // 高解像度です。さすが国交省。
             // 一番最初に読み込まないと、他のレイヤに重なっちゃいます。
@@ -159,12 +127,13 @@ const Map = () => {
                 minzoom: 10,
                 attribution: '<a href="https://www.mlit.go.jp/plateau/">国土交通省Project PLATEAU</a>'
             })
+            /*
             map.addLayer({
                 "id": "plateau_tile",
                 "type": "raster",
                 "source": "plateau_tile",
                 minzoom: 14,
-            });
+            });*/
 
             map.addSource("point", {
                 type: "geojson",
@@ -208,6 +177,7 @@ const Map = () => {
                 }
             })
 
+            /*
             map.addLayer({
                 id: "population_2020",
                 type: "fill",
@@ -219,7 +189,7 @@ const Map = () => {
                     "fill-opacity": 0.2,
                     "fill-outline-color": "#444"
                 }
-            });
+            });*/
 
             /*
             for(let k in gtfs.shapes_linestring_dict){
@@ -239,11 +209,9 @@ const Map = () => {
                 });
             } */
 
-            // PlateauのLOD1建物
-            map.addLayer(tile3dLayer);
+            // 建物データの読み込み
+            building.add(map);
 
-            // 建物情報を登録
-            map.addLayer(buildingLayer);
             // 地形情報を登録
             map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1 });
 
@@ -291,7 +259,7 @@ const Map = () => {
 
         BuildingVisibilityFlag = BuildingVisibilityFlag ? false : true;
         // レイヤの切り替え
-        map.setLayoutProperty(buildingLayer.id, 'visibility', BuildingVisibilityFlag ? "visible" : "none");
+        building.toggleVisibility(BuildingVisibilityFlag ? "3d-buildings-MapboxGL" : "none");
     }
 
     return (
