@@ -4,7 +4,7 @@ import mapboxgl from 'mapbox-gl';
 import "css/Map.css";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLayerGroup, faBuilding } from '@fortawesome/free-solid-svg-icons';
+import { faLayerGroup, faBuilding, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import Modal from 'components/Modal';
 
@@ -54,8 +54,9 @@ const Map = () => {
     const mapContainer = useRef(null);
     const [mapLoadedFlag, setMapLoadedFlag] = useState(false);
 
+    // 3D建物の表示に関する変数
     const [isBuildingModalVisible, setBuildingModalVisibility] = useState(false);
-    const [visibleBuildingLayerID, setVisibleBuildingLayerID] = useState("3d-buildings-MapboxGL")
+    const [visibleBuildingLayerID, setVisibleBuildingLayerID] = useState("3d-buildings-MapboxGL");
 
     const reqIdRef = useRef(); // アニメーションの管理ID
 
@@ -226,12 +227,19 @@ const Map = () => {
                 }
             });
 
-            // Mapが読み込まれたFlagを記録
-            setMapLoadedFlag(true)
-
             // アニメーションを開始
             reqIdRef.current = requestAnimationFrame(animate);
         });
+
+        /* ロード画面の処理 */
+        const closeLoadingScene = (e) => {
+            console.log("idleイベントが呼び出されました。")
+            setMapLoadedFlag(true);
+
+            // idle状態になった後は、永遠に呼ばれ続けるので、呼び出しを解除する。
+            map.off("idle", closeLoadingScene);
+        }
+        map.on("idle", closeLoadingScene);
 
         // Mapがユーザーによって動かされたとき、緯度経度を更新する。
         map.on('move', () => {
@@ -241,8 +249,10 @@ const Map = () => {
         });
 
         return () => {
+            setMapLoadedFlag(false);
             map.remove();   /* これの意味が分からない...消すとIDが重複しているってエラーが出る。 */
             /* 多分、React.StrictModeのせい */
+            cancelAnimationFrame(reqIdRef); //アニメーションの解除
         }
     }, []);
 
@@ -257,12 +267,18 @@ const Map = () => {
     useEffect(() => {
         if (!mapLoadedFlag) return;
 
-        building.toggleVisibility(visibleBuildingLayerID)
+        building.toggleVisibility(visibleBuildingLayerID);
     }, [mapLoadedFlag, visibleBuildingLayerID]);
 
 
     return (
         <div>
+            {!mapLoadedFlag ? (
+                <div className='loader'>
+                    <span>データを読み込んでいます。しばらくお待ちください！</span>
+                    <FontAwesomeIcon icon={faSpinner} size="4x"/>
+                </div>
+            ) : (<></>)}
             <div className='BasicButtonContainer'>
                 <div className='BasicButton' onClick={() => setBuildingModalVisibility(true)}>
                     <span>3D建物</span>
