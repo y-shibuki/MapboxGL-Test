@@ -19,7 +19,7 @@
 
     z-index: 4;
 
-    background-color: rgba(35, 55, 75, 0.9);
+    background-color: rgb(35, 55, 75);
 
     /*　画面の中央に要素を表示させる設定　*/
     display: flex;
@@ -50,30 +50,35 @@
 }
 
 
-.sidebar {
+/** 緯度・経度・ズームレベルを表示するコンポーネント **/
+.DebugComponent {
+    z-index: 1;
+    /* 表示場所 */
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    margin: 12px;
+
+
+    border-radius: 4px;
     background-color: rgba(35, 55, 75, 0.9);
     color: #fff;
     padding: 6px 12px;
     font-family: monospace;
-    z-index: 1;
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin: 12px;
-    border-radius: 4px;
 }
 
 
 /** ボタン **/
 .BasicButtonContainer {
+    z-index: 1;
     /* 表示場所 */
     position: absolute;
     top: 0;
     right: 0;
     margin-top: 12px;
     margin-right: 50px;
-    z-index: 2;
-    /* 前面に表示 */
 
     display: flex;
     flex-flow: column;

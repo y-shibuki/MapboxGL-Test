@@ -66,24 +66,27 @@ const Map = () => {
 
     // HTMLページのDOMツリーにアプリが挿入された直後に呼び出されます。
     useEffect(() => {
-        // MapBoxの初期化
-        map = new mapboxgl.Map({
-            container: mapContainer.current,
-            style: 'mapbox://styles/mapbox/light-v10',//'mapbox://styles/mapbox/satellite-streets-v12',// 
-            center: [lng, lat],
-            zoom: zoom
-        });
-        // 地図のコントロールを追加
-        map.addControl(
-            new mapboxgl.NavigationControl()
-        );
-        // 縮尺を追加
-        map.addControl(new mapboxgl.ScaleControl({
-            maxWidth: 250,
-            unit: 'metric'
-        }));
+        (async () => {
+            // MapBoxの初期化
+            map = new mapboxgl.Map({
+                container: mapContainer.current,
+                style: 'mapbox://styles/mapbox/light-v10',//'mapbox://styles/mapbox/satellite-streets-v12',// 
+                center: [lng, lat],
+                zoom: zoom
+            });
+            // 地図のコントロールを追加
+            map.addControl(
+                new mapboxgl.NavigationControl()
+            );
+            // 縮尺を追加
+            map.addControl(new mapboxgl.ScaleControl({
+                maxWidth: 250,
+                unit: 'metric'
+            }));
 
-        map.on("load", () => {
+            // mapが読み込まれるまで待機
+            await map.once("load");
+
             // GeoJsonデータの登録
             // addSource：
             //  第1引数：ID
@@ -227,33 +230,28 @@ const Map = () => {
                 }
             });
 
-            // アニメーションを開始
-            reqIdRef.current = requestAnimationFrame(animate);
-        });
+            await map.once("idle");
 
-        /* ロード画面の処理 */
-        const closeLoadingScene = (e) => {
-            console.log("idleイベントが呼び出されました。")
             setMapLoadedFlag(true);
 
-            // idle状態になった後は、永遠に呼ばれ続けるので、呼び出しを解除する。
-            map.off("idle", closeLoadingScene);
-        }
-        map.on("idle", closeLoadingScene);
+            // Mapがユーザーによって動かされたとき、緯度経度を更新する。
+            map.on('move', () => {
+                setLng(map.getCenter().lng.toFixed(4));
+                setLat(map.getCenter().lat.toFixed(4));
+                setZoom(map.getZoom().toFixed(2));
+            });
 
-        // Mapがユーザーによって動かされたとき、緯度経度を更新する。
-        map.on('move', () => {
-            setLng(map.getCenter().lng.toFixed(4));
-            setLat(map.getCenter().lat.toFixed(4));
-            setZoom(map.getZoom().toFixed(2));
-        });
+            // アニメーションを開始
+            reqIdRef.current = requestAnimationFrame(animate);
+        })()
 
         return () => {
-            setMapLoadedFlag(false);
-            map.remove();   /* これの意味が分からない...消すとIDが重複しているってエラーが出る。 */
-            /* 多分、React.StrictModeのせい */
+            map.remove();   // React.StrictModeのせいで、Localhostで実行すると、2回レンダリングされます。
+                            // その際に、mapを解放していないと、IDが重複しているってエラーが出ます。
             cancelAnimationFrame(reqIdRef); //アニメーションの解除
         }
+        // ESLintを一行だけ解除
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const animate = () => {
@@ -276,7 +274,7 @@ const Map = () => {
             {!mapLoadedFlag ? (
                 <div className='loader'>
                     <span>データを読み込んでいます。しばらくお待ちください！</span>
-                    <FontAwesomeIcon icon={faSpinner} size="4x"/>
+                    <FontAwesomeIcon icon={faSpinner} size="4x" />
                 </div>
             ) : (<></>)}
             <div className='BasicButtonContainer'>
@@ -294,7 +292,7 @@ const Map = () => {
                 <BuildingLayerModal visibleLayerID={visibleBuildingLayerID} setVisibleLayerID={setVisibleBuildingLayerID} />
             </Modal>
 
-            <div className="sidebar">
+            <div className="DebugComponent">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
             <div ref={mapContainer} className="map-container" />
