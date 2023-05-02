@@ -1,0 +1,112 @@
+[
+    {
+        "id": "JR-East.Tohoku.Utsunomiya",
+        "railway": "JR-East.Tohoku",
+        "coord": [
+            139.898099,
+            36.558773
+        ],
+        "title": {
+            "ja": "宇都宮"
+        }
+    },
+    {
+        "id": "JR-East.Utsunomiya.Utsunomiya",
+        "railway": "JR-East.Utsunomiya",
+        "coord": [
+            139.898734,
+            36.559753
+        ],
+        "title": {
+            "ja": "宇都宮"
+        }
+    },
+    {
+        "id": "JR-East.Utsunomiya.Okamoto",
+        "railway": "JR-East.Utsunomiya",
+        "coord": [
+            139.944259,
+            36.598268
+        ],
+        "title": {
+            "ja": "岡本"
+        }
+    },
+    {
+        "id": "JR-East.Utsunomiya.Suzumenomiya",
+        "railway": "JR-East.Utsunomiya",
+        "coord": [
+            139.877089,
+            36.493908
+        ],
+        "title": {
+            "ja": "雀宮"
+        }
+    },
+    {
+        "id": "JR-East.Nikko.Tsuruta",
+        "railway": "JR-East.Nikko",
+        "coord": [
+            139.858809,
+            36.538283
+        ],
+        "title": {
+            "ja": "鶴田"
+        }
+    },
+    {
+        "id": "JR-East.Nikko.Utsunomiya",
+        "railway": "JR-East.Nikko",
+        "coord": [
+            139.898734,
+            36.559753
+        ],
+        "title": {
+            "ja": "宇都宮"
+        }
+    },
+    {
+        "id": "Tobu.Utsunomiya.Esojima",
+        "railway": "Tobu.Utsunomiya",
+        "coord": [
+            139.860824,
+            36.530958
+        ],
+        "title": {
+            "ja": "江曽島"
+        }
+    },
+    {
+        "id": "Tobu.Utsunomiya.Minami-Utsunomiya",
+        "railway": "Tobu.Utsunomiya",
+        "coord": [
+            139.872074,
+            36.543783
+        ],
+        "title": {
+            "ja": "南宇都宮"
+        }
+    },
+    {
+        "id": "Tobu.Utsunomiya.Tobu-Utsunomiya",
+        "railway": "Tobu.Utsunomiya",
+        "coord": [
+            139.880609,
+            36.558663
+        ],
+        "title": {
+            "ja": "東武宇都宮"
+        }
+    },
+    {
+        "id": "Tobu.Utsunomiya.Nishikawada",
+        "railway": "Tobu.Utsunomiya",
+        "coord": [
+            139.850314,
+            36.514253
+        ],
+        "title": {
+            "ja": "西川田"
+        }
+    }
+]
