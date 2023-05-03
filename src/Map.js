@@ -83,7 +83,7 @@ const Map = () => {
             // MapBoxの初期化
             map = new mapboxgl.Map({
                 container: mapContainer.current,
-                style: 'mapbox://styles/mapbox/light-v10',//'mapbox://styles/mapbox/satellite-streets-v12',// 
+                style: 'mapbox://styles/mapbox/light-v10?optimize=true',//'mapbox://styles/mapbox/satellite-streets-v12',// 
                 center: [lng, lat],
                 zoom: zoom
             });
@@ -134,7 +134,7 @@ const Map = () => {
             // 高解像度です。さすが国交省。
             // 一番最初に読み込まないと、他のレイヤに重なっちゃいます。
             // 本家の解説：https://github.com/Project-PLATEAU/plateau-streaming-tutorial/blob/main/terrain/plateau-terrain-streaming.md
-            // ただデータがない場所を読み込む必要がある場合には、コンソールログにエラーが大量に発生します。
+            // ただ、データがない場所を読み込む必要がある場合には、コンソールログにエラーが大量に発生します。
             map.addSource("plateau_tile", {
                 "type": "raster",
                 "tiles": [
@@ -208,23 +208,21 @@ const Map = () => {
                 }
             });*/
 
-            /*
-            for(let k in gtfs.shapes_linestring_dict){
-                map.addSource(k, {
-                    type: "geojson",
-                    data: gtfs.shapes_linestring_dict[k]
-                });
+            
+            map.addSource("kanto_bus_route", {
+                type: "geojson",
+                data: gtfs.route_layer
+            });
 
-                map.addLayer({
-                    id: k,
-                    type: "line",
-                    source: k,
-                    paint: {
-                        'line-color': '#000',
-                        'line-width': hoge(3, 3),
-                    }
-                });
-            } */
+            map.addLayer({
+                id: "kanto_bus_route",
+                type: "line",
+                source: "kanto_bus_route",
+                paint: {
+                    'line-color': '#000',
+                    'line-width': hoge(3, 3),
+                }
+            });
 
             // 地形情報を登録
             map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1 });
@@ -365,6 +363,7 @@ const Map = () => {
 
         reqIdRef.current = requestAnimationFrame(animate);
     }
+
 
     // 3D建物の表示切り替え
     useEffect(() => {
