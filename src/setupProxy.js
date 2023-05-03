@@ -5,4 +5,8 @@ module.exports = function(app) {
         target: "https://gtfs-rt-files.buscatch.jp",
         changeOrigin: true,
     }));
+    app.use(createProxyMiddleware("/toyama/chitetsu_tram/TripUpdates.pb", {
+        target: "https://gtfs-rt-files.buscatch.jp",
+        changeOrigin: true,
+    }));
 };
