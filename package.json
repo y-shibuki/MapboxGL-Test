@@ -51,12 +51,12 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/y-shibuki/MapboxGL-Test"
   },
   "author": "Hinata Yoshida",
   "license": "MIT",
   "bugs": {
-    "url": ""
+    "url": "https://github.com/y-shibuki/MapboxGL-Test/issues"
   },
   "homepage": ""
 }

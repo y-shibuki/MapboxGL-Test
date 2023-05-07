@@ -27,12 +27,10 @@ import lrt_route_geojson from "assets/LRT_route_single.geojson";
 import lrt_stop_geojson from "assets/LRT_stop.geojson";
 import population_2020_geojson from "assets/250mメッシュ_栃木県_2020年人口.geojson"
 
-import CSV_reader from './utils/csv_reader';
-
 // マップボックスのアクセストークン（吉田のアカウント）
 mapboxgl.accessToken = 'pk.eyJ1Ijoic2hpYnVraSIsImEiOiJjbGRhZGJmd28waHNrM29ubjg3cjFhZWczIn0.sYAMGbs9eB0HdpDAmhz5aA';
 
-const gtfs = new GTFS("/assets/kanto_GTFS")
+const gtfs = new GTFS("/assets/kanto_GTFS", "kanto_bus");
 
 const lrtVehiclePositionLayer = {
     'type': 'FeatureCollection',
@@ -209,20 +207,7 @@ const Map = () => {
             });*/
 
             
-            map.addSource("kanto_bus_route", {
-                type: "geojson",
-                data: gtfs.route_layer
-            });
-
-            map.addLayer({
-                id: "kanto_bus_route",
-                type: "line",
-                source: "kanto_bus_route",
-                paint: {
-                    'line-color': '#000',
-                    'line-width': hoge(3, 3),
-                }
-            });
+            gtfs.onAdd(map)
 
             // 地形情報を登録
             map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1 });
