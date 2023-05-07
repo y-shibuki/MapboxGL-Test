@@ -331,6 +331,8 @@ const Map = () => {
 
             // アニメーションを開始
             reqIdRef.current = requestAnimationFrame(animate);
+
+            gtfs.onTick(map);
         })()
 
         return () => {
