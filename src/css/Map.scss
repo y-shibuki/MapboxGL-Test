@@ -69,6 +69,21 @@
     font-family: monospace;
 }
 
+/** 時計 **/
+.Clock {
+    z-index: 1;
+    /* 表示場所 */
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 12px;
+
+
+    border-radius: 4px;
+    background-color: rgba(35, 55, 75, 0.9);
+    color: #fff;
+    padding: 6px 12px;
+}
 
 /** ボタン **/
 .BasicButtonContainer {

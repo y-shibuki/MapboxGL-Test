@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLayerGroup, faBuilding, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import Modal from 'components/Modal';
+import Clock from 'Clock';
 
 import { hoge } from "distance"
 import { Fuga } from "fuga"
@@ -384,6 +385,8 @@ const Map = () => {
             <Modal Title={"レイヤー"} isOpen={isBuildingModalVisible} setShow={setBuildingModalVisibility}>
                 <BuildingLayerModal visibleLayerID={visibleBuildingLayerID} setVisibleLayerID={setVisibleBuildingLayerID} />
             </Modal>
+
+            <Clock />
 
             <div className="DebugComponent">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
