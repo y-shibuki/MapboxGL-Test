@@ -1,0 +1,270 @@
+[
+    {
+        "id": "VPchitetsu_tram_4988",
+        "isDeleted": false,
+        "vehicle": {
+            "trip": {
+                "tripId": "土日祝_09時12分_系統3001-1-1",
+                "scheduleRelationship": "SCHEDULED"
+            },
+            "position": {
+                "latitude": 36.69866943359375,
+                "longitude": 137.2161407470703
+            },
+            "currentStatus": "IN_TRANSIT_TO",
+            "timestamp": "1683073887",
+            "vehicle": {
+                "id": "chitetsu_tram_4988"
+            }
+        }
+    },
+    {
+        "id": "VPchitetsu_tram_5012",
+        "isDeleted": false,
+        "vehicle": {
+            "trip": {
+                "tripId": "土日祝_09時31分_系統3002-1",
+                "scheduleRelationship": "SCHEDULED"
+            },
+            "position": {
+                "latitude": 36.70158767700195,
+                "longitude": 137.2126922607422
+            },
+            "currentStatus": "IN_TRANSIT_TO",
+            "timestamp": "1683073888",
+            "vehicle": {
+                "id": "chitetsu_tram_5012"
+            }
+        }
+    },
+    {
+        "id": "VPchitetsu_tram_5005",
+        "isDeleted": false,
+        "vehicle": {
+            "trip": {
+                "tripId": "土日祝_09時30分_系統3001-1-2",
+                "scheduleRelationship": "SCHEDULED"
+            },
+            "position": {
+                "latitude": 36.701602935791016,
+                "longitude": 137.2128143310547
+            },
+            "currentStatus": "IN_TRANSIT_TO",
+            "timestamp": "1683073867",
+            "vehicle": {
+                "id": "chitetsu_tram_5005"
+            }
+        }
+    },
+    {
+        "id": "VPchitetsu_tram_4987",
+        "isDeleted": false,
+        "vehicle": {
+            "trip": {
+                "tripId": "土日祝_09時25分_系統3001-1-2",
+                "scheduleRelationship": "SCHEDULED"
+            },
+            "position": {
+                "latitude": 36.69717788696289,
+                "longitude": 137.21592712402344
+            },
+            "currentStatus": "IN_TRANSIT_TO",
+            "timestamp": "1683073888",
+            "vehicle": {
+                "id": "chitetsu_tram_4987"
+            }
+        }
+    },
+    {
+        "id": "VPchitetsu_tram_5003",
+        "isDeleted": false,
+        "vehicle": {
+            "trip": {
+                "tripId": "土日祝_08時52分_系統3001-1-1",
+                "scheduleRelationship": "SCHEDULED"
+            },
+            "position": {
+                "latitude": 36.66902542114258,
+                "longitude": 137.21963500976562
+            },
+            "currentStatus": "IN_TRANSIT_TO",
+            "timestamp": "1683073899",
+            "vehicle": {
+                "id": "chitetsu_tram_5003"
+            }
+        }
+    },
+    {
+        "id": "VPchitetsu_tram_4976",
+        "isDeleted": false,
+        "vehicle": {
+            "trip": {
+                "tripId": "土日祝_09時30分_系統3003-1-2",
+                "scheduleRelationship": "SCHEDULED",
+                "directionId": 0
+            },
+            "position": {
+                "latitude": 36.70278549194336,
+                "longitude": 137.21336364746094
+            },
+            "currentStatus": "IN_TRANSIT_TO",
+            "timestamp": "1683073898",
+            "vehicle": {
+                "id": "chitetsu_tram_4976"
+            }
+        }
+    },
+    {
+        "id": "VPchitetsu_tram_4984",
+        "isDeleted": false,
+        "vehicle": {
+            "trip": {
+                "tripId": "土日祝_09時20分_系統3001-1-2",
+                "scheduleRelationship": "SCHEDULED"
+            },
+            "position": {
+                "latitude": 36.68902587890625,
+                "longitude": 137.21563720703125
+            },
+            "currentStatus": "IN_TRANSIT_TO",
+            "timestamp": "1683073898",
+            "vehicle": {
+                "id": "chitetsu_tram_4984"
+            }
+        }
+    },
+    {
+        "id": "VPchitetsu_tram_5001",
+        "isDeleted": false,
+        "vehicle": {
+            "trip": {
+                "tripId": "土日祝_09時17分_系統3001-1-1",
+                "scheduleRelationship": "SCHEDULED"
+            },
+            "position": {
+                "latitude": 36.69144058227539,
+                "longitude": 137.21568298339844
+            },
+            "currentStatus": "IN_TRANSIT_TO",
+            "timestamp": "1683073888",
+            "vehicle": {
+                "id": "chitetsu_tram_5001"
+            }
+        }
+    },
+    {
+        "id": "VPchitetsu_tram_5010",
+        "isDeleted": false,
+        "vehicle": {
+            "trip": {
+                "tripId": "土日祝_09時30分_系統3001-2-1",
+                "scheduleRelationship": "SCHEDULED"
+            },
+            "position": {
+                "latitude": 36.69673538208008,
+                "longitude": 137.19322204589844
+            },
+            "currentStatus": "IN_TRANSIT_TO",
+            "timestamp": "1683073887",
+            "vehicle": {
+                "id": "chitetsu_tram_5010"
+            }
+        }
+    },
+    {
+        "id": "VPchitetsu_tram_4982",
+        "isDeleted": false,
+        "vehicle": {
+            "trip": {
+                "tripId": "土日祝_09時22分_系統3001-1-1",
+                "scheduleRelationship": "SCHEDULED"
+            },
+            "position": {
+                "latitude": 36.6864013671875,
+                "longitude": 137.21571350097656
+            },
+            "currentStatus": "IN_TRANSIT_TO",
+            "timestamp": "1683073898",
+            "vehicle": {
+                "id": "chitetsu_tram_4982"
+            }
+        }
+    },
+    {
+        "id": "VPchitetsu_tram_4990",
+        "isDeleted": false,
+        "vehicle": {
+            "trip": {
+                "tripId": "土日祝_09時16分_系統3001-1-2",
+                "scheduleRelationship": "SCHEDULED"
+            },
+            "position": {
+                "latitude": 36.67908477783203,
+                "longitude": 137.2175750732422
+            },
+            "currentStatus": "IN_TRANSIT_TO",
+            "timestamp": "1683073889",
+            "vehicle": {
+                "id": "chitetsu_tram_4990"
+            }
+        }
+    },
+    {
+        "id": "VPchitetsu_tram_5007",
+        "isDeleted": false,
+        "vehicle": {
+            "trip": {
+                "tripId": "土日祝_09時16分_系統3003-1-1",
+                "scheduleRelationship": "SCHEDULED",
+                "directionId": 1
+            },
+            "position": {
+                "latitude": 36.722251892089844,
+                "longitude": 137.2248992919922
+            },
+            "currentStatus": "IN_TRANSIT_TO",
+            "timestamp": "1683073888",
+            "vehicle": {
+                "id": "chitetsu_tram_5007"
+            }
+        }
+    },
+    {
+        "id": "VPchitetsu_tram_4985",
+        "isDeleted": false,
+        "vehicle": {
+            "trip": {
+                "tripId": "土日祝_09時27分_系統3001-1-1",
+                "scheduleRelationship": "SCHEDULED"
+            },
+            "position": {
+                "latitude": 36.678123474121094,
+                "longitude": 137.21803283691406
+            },
+            "currentStatus": "IN_TRANSIT_TO",
+            "timestamp": "1683073898",
+            "vehicle": {
+                "id": "chitetsu_tram_4985"
+            }
+        }
+    },
+    {
+        "id": "VPchitetsu_tram_4983",
+        "isDeleted": false,
+        "vehicle": {
+            "trip": {
+                "tripId": "土日祝_09時24分_系統3001-2-2",
+                "scheduleRelationship": "SCHEDULED"
+            },
+            "position": {
+                "latitude": 36.698814392089844,
+                "longitude": 137.2112274169922
+            },
+            "currentStatus": "IN_TRANSIT_TO",
+            "timestamp": "1683073888",
+            "vehicle": {
+                "id": "chitetsu_tram_4983"
+            }
+        }
+    }
+]

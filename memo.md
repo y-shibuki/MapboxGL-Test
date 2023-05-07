@@ -16,17 +16,23 @@ node 16で機能、18だと動かないかも。
 4. 複数のGeoJsonを表示 OK
 5. 建物のOn、Offができるように OK
 6. グラデーションでレイヤを表示できる様に
+7. 建物表示を別レイヤに
+8. ボタンを押したら、レイヤ選択画面が表示される（モーダルウィンドウ）
+9. レイヤの表示、非表示ができる様に
+10. Loading画面の実装
+11. jsonファイルの読み込み
+12. ホバーで駅名がわかるように
+13. GTFS-RTの情報を表示
+14. バスの路線の読み込み
 
-6. ホバーで駅名がわかるように
-7. GTFSから混雑度がメッシュで表示できるように
-8. レイヤの表示、非表示ができる様に
-9. TypeScriptへの切り替え
+14. GTFSから混雑度がメッシュで表示できるように
+15. 上に現在の時刻を表示
+16. LRTのリアルタイム情報を表示
+17. バスの場所を表示（時刻表）
 
 ## 構造
 ### src
 * index.js  
-こういうもの。基本的に変更しない。
-* App.js  
 こういうもの。基本的に変更しない。
 * index.css  
 こういうもの。基本的に変更しない。
@@ -41,6 +47,8 @@ GTFSのデータは必要なものだけを揃えている。
 SVGの編集:https://jakearchibald.github.io/svgomg/  
 mapboxはロードする度に課金への道が進んでいる（50000回のロードで課金が始まる）
 Plateauデータのストリーミング：https://github.com/Project-PLATEAU/plateau-streaming-tutorial
+Mapにロード画面を追加：https://gis.stackexchange.com/questions/240134/mapbox-gl-js-source-loaded-event  
+レイヤが多すぎると重くなるっぽい。できるだけ、同じレイヤにFeatureCollectionとしてまとめたい。  
 
 zoomレベルごとに半径を変える計算式  
 https://blog.shimar.me/2022/11/03/mapbox-circle-layer
