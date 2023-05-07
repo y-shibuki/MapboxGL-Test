@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLayerGroup, faBuilding, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import Modal from 'components/Modal';
-import Clock from 'Clock';
+import { Clock, ClockComponent } from 'Clock';
 
 import { hoge } from "distance"
 import { Fuga } from "fuga"
@@ -330,6 +330,10 @@ const Map = () => {
 
             fuga = new Fuga(0.2, route, "point");
 
+            let d = new Date();
+            d.setHours(10);
+            Clock.setDate(d);
+
             gtfs.onTick();
 
             // アニメーションを開始
@@ -386,7 +390,7 @@ const Map = () => {
                 <BuildingLayerModal visibleLayerID={visibleBuildingLayerID} setVisibleLayerID={setVisibleBuildingLayerID} />
             </Modal>
 
-            <Clock />
+            <ClockComponent />
 
             <div className="DebugComponent">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}

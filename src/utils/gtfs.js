@@ -146,7 +146,7 @@ export class GTFS {
                 }
             }
         });
-
+        console.log(me.vehicles);
         me.animate();
     }
 
