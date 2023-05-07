@@ -123,9 +123,11 @@ export class GTFS {
                     a_hms = _a.split(":"),
                     d = new Date(),
                     a = new Date();
+                d.setDate(now.getDate());
                 d.setHours(d_hms[0]);
                 d.setMinutes(d_hms[1]);
                 d.setSeconds(d_hms[2]);
+                a.setDate(now.getDate());
                 a.setHours(a_hms[0]);
                 a.setMinutes(a_hms[1]);
                 a.setSeconds(a_hms[2]);
@@ -146,7 +148,7 @@ export class GTFS {
                 }
             }
         });
-        console.log(me.vehicles);
+
         me.animate();
     }
 
