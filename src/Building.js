@@ -10,7 +10,7 @@ const buildingLayer = {
         "id": "3d-buildings-MapboxGL",
         "source": "composite",
         "source-layer": "building",
-        "filter": ["==", "extrude", "true"],
+        "filter": ["!=", "height", "null"],
         "type": "fill-extrusion",
         "minzoom": 8,
         "paint": {
