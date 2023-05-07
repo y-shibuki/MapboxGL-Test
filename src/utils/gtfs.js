@@ -1,4 +1,4 @@
-import { lineString, point, featureCollection } from "@turf/turf";
+import { lineString, point, featureCollection, nearestPointOnLine, along } from "@turf/turf";
 import { json } from "d3";
 import { hoge } from "distance"
 
@@ -11,8 +11,16 @@ export class GTFS {
         json(this.folder_path + "/shapes.json").then(data => {
             this.route_layer = featureCollection(
                 data.map((v) => {
-                    let { stop_id, coord } = v;
-                    return lineString(coord, { id: stop_id });
+                    let { coord } = v;
+                    return lineString(coord);
+                })
+            );
+
+            // key: shape_id, value: ルートの座標のMapデータ
+            this.routes = new Map(
+                data.map(v => {
+                    let { shape_id, coord } = v;
+                    return [shape_id, lineString(coord)];
                 })
             );
         });
@@ -28,7 +36,7 @@ export class GTFS {
             this.stops = new Map(
                 data.map(v => {
                     let { stop_id, coord } = v;
-                    return [stop_id, coord];
+                    return [stop_id, point(coord)];
                 })
             );
         });
@@ -42,10 +50,14 @@ export class GTFS {
         this.vehicles = new Map();
         // 車両を描画するレイヤ
         this.vehicle_layer = null;
+
+        // 最後に車両を描画した時刻
+        this.time = null;
     }
 
     onAdd(map) {
         const me = this;
+        me.map = map;
 
         map.addSource(me.prefix + "_route", {
             type: "geojson",
@@ -94,21 +106,19 @@ export class GTFS {
                 "circle-stroke-width": hoge(1, 1),
                 "circle-pitch-alignment": "map", // カメラの角度に応じて、円の角度を変える。要するに、地面に円が貼り付いている様に見える。
             }
-        })
+        });
     }
 
-    onTick(map) {
+    onTick() {
         const me = this;
         const now = new Date();
-        now.setHours(10);
-        now.setMinutes(57);
-        now.setSeconds(0);
+        now.setHours(now.getHours() - 12);
 
         me.vehicles = new Map();
         this.timetable.forEach((trip) => {
-            const { trip_id, tt } = trip;
+            const { trip_id, tt, shape_id } = trip;
             for (let i = 0; i < tt.length - 1; i++) {
-                const _d = tt[i]["d"], _a = tt[i + 1]["a"],
+                const _d = tt[i]["d"], _a = tt[i + 1]["a"], {s} = tt[i],
                     d_hms = _d.split(":"),
                     a_hms = _a.split(":"),
                     d = new Date(),
@@ -120,16 +130,41 @@ export class GTFS {
                 a.setMinutes(a_hms[1]);
                 a.setSeconds(a_hms[2]);
                 if (d <= now & now <= a) {
-                    me.vehicles.set(trip_id, me.stops.get(tt[i]["s"]));
+                    // velocityはkm/ms単位です
+                    const line = me.routes.get(shape_id),
+                        start_point = me.stops.get(tt[i]["s"]),
+                        end_point = me.stops.get(tt[i + 1]["s"]),
+                        start_distance = nearestPointOnLine(line, start_point, {units: "kilometers"}).properties.location,
+                        end_distance = nearestPointOnLine(line, end_point, {units: "kilometers"}).properties.location,
+                        velocity = (end_distance - start_distance) / (a - d);
+                    me.vehicles.set(trip_id, {
+                        "time": d.getTime(),
+                        "line": line,
+                        "distance": start_distance,
+                        "velocity": velocity
+                    });
                 }
             }
         });
 
+        me.animate();
+    }
+
+    animate(){
+        const me = this,
+            {map} = me;
+        const now = new Date();
+        now.setHours(now.getHours() - 12);  //デバック用
+        const now_time = now.getTime();
+
         // Mapでmapを使う方法：https://stackoverflow.com/questions/31084619/map-a-javascript-es6-map
         map.getSource(me.prefix + "_vehicle").setData(
             featureCollection(
-                Array.from(me.vehicles).map(([k, v]) => {
-                    return point(v);
+                Array.from(me.vehicles).map(([, v]) => {
+                    const offset = now_time - v["time"];
+                    v["time"] = now_time;
+                    v["distance"] += v["velocity"] * offset;
+                    return along(v["line"], v["distance"], {units: "kilometers"});
                 })
             )
         );

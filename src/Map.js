@@ -329,10 +329,10 @@ const Map = () => {
 
             fuga = new Fuga(0.2, route, "point");
 
+            gtfs.onTick();
+
             // アニメーションを開始
             reqIdRef.current = requestAnimationFrame(animate);
-
-            gtfs.onTick(map);
         })()
 
         return () => {
@@ -347,6 +347,8 @@ const Map = () => {
     const animate = () => {
         const [id, point] = fuga.animate();
         map.getSource(id).setData(point);
+
+        gtfs.animate();
 
         reqIdRef.current = requestAnimationFrame(animate);
     }
