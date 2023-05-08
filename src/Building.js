@@ -1,6 +1,7 @@
 import { MapboxLayer } from "@deck.gl/mapbox"
 import { Tile3DLayer } from '@deck.gl/geo-layers';
 import { Tiles3DLoader } from '@loaders.gl/3d-tiles';
+import { AmbientLight, DirectionalLight, LightingEffect } from "deck.gl";
 
 // 建物レイヤ
 // https://deck.gl/docs/api-reference/geo-layers/tile-3d-layer
@@ -10,7 +11,7 @@ const buildingLayer = {
         "id": "3d-buildings-MapboxGL",
         "source": "composite",
         "source-layer": "building",
-        "filter": ["!=", "height", "null"],
+        'filter': ['==', 'extrude', 'true'],
         "type": "fill-extrusion",
         "minzoom": 8,
         "paint": {
@@ -103,6 +104,21 @@ export class Building {
             map.addLayer(buildingLayer[key]);
             map.setLayoutProperty(key, 'visibility', key === me.visibleLayerID ? "visible" : "none");
         };
+
+        me.ambientLight = new AmbientLight({
+            color: "#fff",
+            intensity: 3.0
+        });
+        me.directionalLight = new DirectionalLight({
+            color: "#fff",
+            intensity: 9.0,
+            direction: [0, 0, -1]
+        });
+
+        map.__deck.props.effect = [new LightingEffect({
+            ambientLight: me.ambientLight,
+            directionalLight: me.directionalLight
+        })];
     }
 
     toggleVisibility(layerID) {

@@ -28,8 +28,8 @@ export class GTFS {
         json(this.folder_path + "/stops.json").then(data => {
             this.stop_layer = featureCollection(
                 data.map(v => {
-                    let { stop_id, coord } = v;
-                    return point(coord, { id: stop_id });
+                    let { stop_name, coord } = v;
+                    return point(coord, { name: stop_name });
                 })
             );
             // key: stop_id, value: 駅の座標のMapデータ
@@ -79,7 +79,8 @@ export class GTFS {
             minzoom: 10,
             paint: {
                 'line-color': '#000',
-                'line-width': hoge(3, 3),
+                'line-width': hoge(2, 2),
+                "line-opacity": 0.5
             }
         });
         map.addLayer({
@@ -105,6 +106,24 @@ export class GTFS {
                 "circle-stroke-color": "#f99",
                 "circle-stroke-width": hoge(1, 1),
                 "circle-pitch-alignment": "map", // カメラの角度に応じて、円の角度を変える。要するに、地面に円が貼り付いている様に見える。
+            }
+        });
+        map.addLayer({
+            id: me.prefix + "_stop_label",
+            type: "symbol",
+            source: me.prefix + "_stop",
+            minzoom: 10,
+            paint: {
+                "text-halo-blur": 5,
+                "text-halo-color": "#fff",
+                "text-halo-width": 10,
+                "text-opacity": 0.8,
+            },
+            layout: {
+                "text-field": ["get", "name"],
+                "text-anchor": "bottom",
+                "text-pitch-alignment": "viewport",
+                "text-size": 14,
             }
         });
     }

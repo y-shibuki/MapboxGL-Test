@@ -82,7 +82,7 @@ const Map = () => {
             // MapBoxの初期化
             map = new mapboxgl.Map({
                 container: mapContainer.current,
-                style: 'mapbox://styles/mapbox/light-v10?optimize=true',//'mapbox://styles/mapbox/satellite-streets-v12',// 
+                style: 'mapbox://styles/mapbox/light-v10',//'mapbox://styles/mapbox/satellite-streets-v12',// 
                 center: [lng, lat],
                 zoom: zoom
             });
@@ -143,13 +143,12 @@ const Map = () => {
                 minzoom: 10,
                 attribution: '<a href="https://www.mlit.go.jp/plateau/">国土交通省Project PLATEAU</a>'
             })
-            /*
             map.addLayer({
                 "id": "plateau_tile",
                 "type": "raster",
                 "source": "plateau_tile",
                 minzoom: 14,
-            });*/
+            });
 
             map.addSource("point", {
                 type: "geojson",
