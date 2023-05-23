@@ -8,7 +8,7 @@ export class GTFS {
         this.prefix = prefix;
 
         // ルートのデータ
-        json(this.folder_path + "/shapes.json").then(data => {
+        json(this.folder_path + "/routes.json").then(data => {
             this.route_layer = featureCollection(
                 data.map((v) => {
                     let { coord } = v;
@@ -70,7 +70,7 @@ export class GTFS {
         map.addSource(me.prefix + "_vehicle", {
             type: "geojson",
             data: me.vehicle_layer
-        })
+        });
 
         map.addLayer({
             id: me.prefix + "_route",
@@ -131,7 +131,7 @@ export class GTFS {
     onTick() {
         const me = this;
         const now = new Date();
-        now.setHours(now.getHours() - 12);
+        now.setHours(10);
 
         me.vehicles = new Map();
         this.timetable.forEach((trip) => {
@@ -175,7 +175,7 @@ export class GTFS {
         const me = this,
             {map} = me;
         const now = new Date();
-        now.setHours(now.getHours() - 12);  //デバック用
+        now.setHours(10);  //デバック用
         const now_time = now.getTime();
 
         // Mapでmapを使う方法：https://stackoverflow.com/questions/31084619/map-a-javascript-es6-map
