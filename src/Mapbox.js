@@ -33,7 +33,7 @@ import population_2020_geojson from "assets/250mメッシュ_栃木県_2020年�
 mapboxgl.accessToken = 'pk.eyJ1Ijoic2hpYnVraSIsImEiOiJjbGRhZGJmd28waHNrM29ubjg3cjFhZWczIn0.sYAMGbs9eB0HdpDAmhz5aA';
 
 const gtfs_list = [
-    new GTFS("/assets/kanto_GTFS", "kanto_bus"),
+    //new GTFS("/assets/kanto_GTFS", "kanto_bus"),
     new GTFS("/assets/ToyamaChitetsu", "toyama_chitetsu"),
 ];
 
@@ -285,40 +285,6 @@ const Mapbox = () => {
                 map.getCanvas().style.cursor = '';
             });
 
-            /** GTFS-RTをお試し **/
-            /* https://github.com/MobilityData/gtfs-realtime-bindings/blob/master/nodejs/README.md */
-            await axios.get("/toyama/chitetsu_tram/VehiclePositions.pb", { responseType: "arraybuffer" })
-                .then(response => {
-                    const { data } = response,
-                        feed = transit_realtime.FeedMessage.decode(new Uint8Array(data));
-
-                    map.addSource("ToyamaLRTVehicle", {
-                        type: 'geojson',
-                        data: featureCollection(
-                            feed.entity.map(e => {
-                                const { trip, position } = e.vehicle;
-                                return point([position.longitude, position.latitude], { tripId: trip.tripId });
-                            })
-                        )
-                    });
-                    map.addLayer({
-                        id: "ToyamaLRTVehicle",
-                        type: "circle",
-                        source: "ToyamaLRTVehicle",
-                        paint: {
-                            'circle-color': "#f77",
-                            "circle-radius": hoge(4, 6),      // 地図上で半径を4mで固定する。
-                            "circle-stroke-color": "#f99",
-                            "circle-stroke-width": hoge(1, 1),
-                            "circle-pitch-alignment": "map", // カメラの角度に応じて、円の角度を変える。要するに、地面に円が貼り付いている様に見える。
-                        }
-                    })
-                }).catch(error => {
-                    console.log(error);
-                    console.log("GTFSデータの取得に失敗しました");
-                });
-
-
             // 建物データの読み込み
             building.add(map);
 
@@ -335,11 +301,10 @@ const Mapbox = () => {
 
             fuga = new Fuga(0.2, route, "point");
 
-            /*
+            
             let d = new Date();
             d.setHours(10);
             Clock.setDate(d);
-            */
 
             gtfs_list.forEach(x => {
                 x.onTick();

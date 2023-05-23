@@ -1,9 +1,10 @@
-import { lineString, point, featureCollection, nearestPointOnLine, along } from "@turf/turf";
+import { lineString, point, featureCollection, nearestPointOnLine, along, lineDistance } from "@turf/turf";
 import { json } from "d3";
 import { hoge } from "distance"
+import mapboxgl from 'mapbox-gl';
 
 export class GTFS {
-    constructor(folder_path, prefix) {
+    constructor(folder_path, prefix, gtfs_rt=false) {
         this.folder_path = folder_path;
         this.prefix = prefix;
 
@@ -126,6 +127,21 @@ export class GTFS {
                 "text-size": 14,
             }
         });
+
+        map.on('click', me.prefix + "_vehicle", function (e) {
+            const { id } = e.features[0].properties;
+            /*
+            new mapboxgl.Popup()
+                .setLngLat(lngLat)
+                .setHTML(id)
+                .addTo(map);*/
+        });
+        map.on('mouseenter', me.prefix + "_vehicle", () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+        map.on('mouseleave', me.prefix + "_vehicle", () => {
+            map.getCanvas().style.cursor = '';
+        });
     }
 
     onTick() {
@@ -137,19 +153,17 @@ export class GTFS {
         this.timetable.forEach((trip) => {
             const { trip_id, tt, shape_id } = trip;
             for (let i = 0; i < tt.length - 1; i++) {
-                const _d = tt[i]["d"], _a = tt[i + 1]["a"], {s} = tt[i],
+                const _d = tt[i]["d"],
+                    _a = tt[i + 1]["a"],
+                    {s} = tt[i],
                     d_hms = _d.split(":"),
                     a_hms = _a.split(":"),
                     d = new Date(),
                     a = new Date();
                 d.setDate(now.getDate());
-                d.setHours(d_hms[0]);
-                d.setMinutes(d_hms[1]);
-                d.setSeconds(d_hms[2]);
+                d.setHours(...d_hms);
                 a.setDate(now.getDate());
-                a.setHours(a_hms[0]);
-                a.setMinutes(a_hms[1]);
-                a.setSeconds(a_hms[2]);
+                a.setHours(...a_hms)
                 if (d <= now & now <= a) {
                     // velocityはkm/ms単位です
                     const line = me.routes.get(shape_id),
@@ -161,6 +175,7 @@ export class GTFS {
                     me.vehicles.set(trip_id, {
                         "time": d.getTime(),
                         "line": line,
+                        "line_distance": lineDistance(line, {units: "kilometers"}),
                         "distance": start_distance,
                         "velocity": velocity
                     });
