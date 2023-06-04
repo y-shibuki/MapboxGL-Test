@@ -1,24 +1,22 @@
 import mapboxgl from "mapbox-gl";
 import * as THREE from "three"
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader"
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
 
 export class ThreeLayer{
-    constructor(layer_id, file_path){
+    constructor(layer_id, file_path, modelOrigin, ratio){
         this.layer_id = layer_id;
         this.file_path = file_path;
+        this.modelOrigin = modelOrigin;
+        this.ratio = ratio;
     }
 
     onAdd(map){
         const me = this;
         me.map = map;
 
-        const modelOrigin = [139.899260236867036, 36.559057305578094];   // 緯度経度
-        let modelAltitude = 0                                            // 高度
-
         const modelRotate = [Math.PI / 2, 0, 0];                         // ？
         const mercatorCoordinate = mapboxgl.MercatorCoordinate.fromLngLat(
-            modelOrigin, modelAltitude
+            me.modelOrigin, 0
         );
         // transformation parameters to position, rotate and scale the 3D model onto the map
         const modelTransform = {
@@ -50,11 +48,13 @@ export class ThreeLayer{
                 directionalLight2.position.set(0, 70, 100).normalize();
                 this.scene.add(directionalLight2);
     
-                const loader = new GLTFLoader();
+                const loader = new FBXLoader();
+                loader.setResourcePath("/assets/FBX/maps/");
                 loader.load(
                     me.file_path,
                     (obj) => {
-                        this.scene.add(obj.scene);
+                        obj.scale.set(me.ratio, me.ratio, me.ratio);
+                        this.scene.add(obj);
                     }
                 );
                 this.map = map;
@@ -106,9 +106,9 @@ export class ThreeLayer{
                 this.map.triggerRepaint();
             },
             setAltitude(){
-                modelAltitude = Math.floor(map.queryTerrainElevation(modelOrigin, {exaggerated: false}));
+                const modelAltitude = Math.floor(map.queryTerrainElevation(me.modelOrigin, {exaggerated: false}));
                 const updateMercatorCoordinate = mapboxgl.MercatorCoordinate.fromLngLat(
-                    modelOrigin, modelAltitude
+                    me.modelOrigin, modelAltitude
                 );
                 modelTransform.translateX = updateMercatorCoordinate.x;
                 modelTransform.translateY = updateMercatorCoordinate.y;

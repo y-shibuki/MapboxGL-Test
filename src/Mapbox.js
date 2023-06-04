@@ -6,9 +6,7 @@ import "css/Map.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLayerGroup, faBuilding, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
-import { transit_realtime } from 'gtfs-realtime-bindings';
-import axios from 'axios';
-import { featureCollection, point } from '@turf/turf';
+import { point } from '@turf/turf';
 
 import Modal from 'components/Modal';
 import { Clock, ClockComponent } from 'Clock';
@@ -16,11 +14,9 @@ import { Clock, ClockComponent } from 'Clock';
 import { hoge } from "distance"
 import { Fuga } from "fuga"
 import { GTFS } from 'utils/gtfs';
-import { graduated_colors, graduated_option } from 'utils/graduated_colors';
-import Color from 'utils/Color'
+
 
 import { Building, BuildingLayerModal } from 'Building';
-import { LayerModal } from 'components/LayerModal'
 
 import station_json from "assets/station.json"
 
@@ -33,8 +29,9 @@ import { ThreeLayer } from 'utils/ThreeLayer';
 // マップボックスのアクセストークン（吉田のアカウント）
 mapboxgl.accessToken = 'pk.eyJ1Ijoic2hpYnVraSIsImEiOiJjbGRhZGJmd28waHNrM29ubjg3cjFhZWczIn0.sYAMGbs9eB0HdpDAmhz5aA';
 
+// GTFSの読み込み
 const gtfs_list = [
-    //new GTFS("/assets/kanto_GTFS", "kanto_bus"),
+    new GTFS("/assets/kanto_GTFS", "kanto_bus"),
     new GTFS("/assets/ToyamaChitetsu", "toyama_chitetsu"),
 ];
 
@@ -67,11 +64,11 @@ let station_layer = {
 
 let station_data = {}
 
-let layerGroup = {
-    "population_2020": { layers: ["population_2020"], description: "宇都宮市の人口(2020年・250mメッシュ)" },
-}
+const gairozyu_points = [[ 139.899381033625104, 36.558608059722616 ], [ 139.899436668852786, 36.558604050050533 ], [ 139.899492304074727, 36.558600040352516 ], [ 139.899547939290841, 36.558596030628543 ], [ 139.899603574501185, 36.558592020878606 ], [ 139.899659209705732, 36.558588011102714 ], [ 139.89971484490448, 36.558584001300865 ], [ 139.899379928037803, 36.558589264738259 ], [ 139.899435580623646, 36.558585415159584 ], [ 139.899491233203946, 36.558581565554917 ], [ 139.899546885778648, 36.558577715924294 ], [ 139.899602538347807, 36.558573866267707 ], [ 139.899658190911424, 36.558570016585129 ], [ 139.899713843469442, 36.558566166876588 ]];
 
-const test_three_layer = new ThreeLayer("test_three_layer", "assets/FBX/LRT.ﾓﾃﾞﾙ1.fbx");
+const test_three_layer = gairozyu_points.map((p, idx) => {
+    return new ThreeLayer("gairozyu_" + idx.toString(), "assets/FBX/Gledista_Triacanthos.fbx", p, 0.001)
+});
 
 const Mapbox = () => {
     const mapContainer = useRef(null);
@@ -89,7 +86,7 @@ const Mapbox = () => {
 
     const [lng, setLng] = useState(139.8987);
     const [lat, setLat] = useState(36.5594);
-    const [zoom, setZoom] = useState(15);
+    const [zoom, setZoom] = useState(16);
 
     // HTMLページのDOMツリーにアプリが挿入された直後に呼び出されます。
     useEffect(() => {
@@ -100,12 +97,11 @@ const Mapbox = () => {
                 style: 'mapbox://styles/mapbox/light-v10',//'mapbox://styles/mapbox/satellite-streets-v12',// 
                 center: [lng, lat],
                 zoom: zoom,
+                pitch: 60,
                 antialias: true
             });
             // 地図のコントロールを追加
-            map.addControl(
-                new mapboxgl.NavigationControl()
-            );
+            map.addControl( new mapboxgl.NavigationControl() );
             // 縮尺を追加
             map.addControl(new mapboxgl.ScaleControl({
                 maxWidth: 250,
@@ -114,11 +110,6 @@ const Mapbox = () => {
 
             // mapが読み込まれるまで待機
             await map.once("load");
-
-            // GeoJsonデータの登録
-            // addSource：
-            //  第1引数：ID
-            //  第2引数：詳細
 
             // LRTの路線
             map.addSource("lrt_route", {
@@ -129,11 +120,6 @@ const Mapbox = () => {
             map.addSource("lrt_stop", {
                 type: "geojson",
                 data: lrt_stop_geojson
-            });
-            // 250mメッシュ
-            map.addSource("population_2020", {
-                type: "geojson",
-                data: population_2020_geojson
             });
 
             // 地形情報
@@ -222,25 +208,7 @@ const Mapbox = () => {
                 }
             });
 
-            /*
-            // 人口データ
-            map.addLayer({
-                id: "population_2020",
-                type: "fill-extrusion",
-                source: "population_2020",
-                filter: ["to-boolean", ["get", "Population_2020"]],
-                paint: {
-                    'fill-extrusion-color': graduated_option(
-                        graduated_colors([new Color(255, 255, 255), new Color(255, 0, 0)], 5), 0, 5, 100, "Population_2020"
-                    ),
-                    "fill-extrusion-opacity": 0.8,
-                    "fill-extrusion-height": ["get", "Population_2020"]
-                },
-            });*/
-
-            gtfs_list.forEach(x => {
-                x.onAdd(map);
-            })
+            gtfs_list.forEach(x => { x.onAdd(map); });
 
             /** 電車の駅を読み込む **/
             /* あとで別ファイルに切り分け */
@@ -292,11 +260,16 @@ const Mapbox = () => {
             // 建物データの読み込み
             building.add(map);
 
-            test_three_layer.onAdd(map);
+            test_three_layer.forEach(x => {
+                x.onAdd(map)
+            });
 
             await map.once("idle");
 
-            test_three_layer.setAltitude();
+            test_three_layer.forEach(x => {
+                x.setAltitude();
+            });
+
             setMapLoadedFlag(true);
 
             // Mapがユーザーによって動かされたとき、緯度経度を更新する。
