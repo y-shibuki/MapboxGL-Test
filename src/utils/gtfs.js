@@ -2,6 +2,7 @@ import { lineString, point, featureCollection, nearestPointOnLine, along, lineDi
 import { json } from "d3";
 import { hoge } from "distance"
 import mapboxgl from 'mapbox-gl';
+import { Clock } from "Clock";
 
 export class GTFS {
     constructor(folder_path, prefix, gtfs_rt=false) {
@@ -146,8 +147,7 @@ export class GTFS {
 
     onTick() {
         const me = this;
-        const now = new Date();
-        now.setHours(10);
+        const now = Clock.getDate();
 
         me.vehicles = new Map();
         this.timetable.forEach((trip) => {
@@ -189,17 +189,15 @@ export class GTFS {
     animate(){
         const me = this,
             {map} = me;
-        const now = new Date();
-        now.setHours(10);  //デバック用
-        const now_time = now.getTime();
+        const now = Clock.getDate();
 
         // Mapでmapを使う方法：https://stackoverflow.com/questions/31084619/map-a-javascript-es6-map
         map.getSource(me.prefix + "_vehicle").setData(
             featureCollection(
                 Array.from(me.vehicles).map(([, v]) => {
-                    const offset = now_time - v["time"];
-                    v["time"] = now_time;
-                    v["distance"] += v["velocity"] * offset;
+                    const offset = now.getTime() - v["time"];
+                    v["time"] = now.getTime();
+                    v["distance"] = Math.max(v["distance"] + v["velocity"] * offset, v["line_distance"]);
                     return along(v["line"], v["distance"], {units: "kilometers"});
                 })
             )
