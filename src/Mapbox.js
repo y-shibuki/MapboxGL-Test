@@ -28,6 +28,7 @@ import station_json from "assets/station.json"
 import lrt_route_geojson from "assets/LRT_route_single.geojson";
 import lrt_stop_geojson from "assets/LRT_stop.geojson";
 import population_2020_geojson from "assets/250mメッシュ_栃木県_2020年人口.geojson"
+import { ThreeLayer } from 'utils/ThreeLayer';
 
 // マップボックスのアクセストークン（吉田のアカウント）
 mapboxgl.accessToken = 'pk.eyJ1Ijoic2hpYnVraSIsImEiOiJjbGRhZGJmd28waHNrM29ubjg3cjFhZWczIn0.sYAMGbs9eB0HdpDAmhz5aA';
@@ -70,6 +71,8 @@ let layerGroup = {
     "population_2020": { layers: ["population_2020"], description: "宇都宮市の人口(2020年・250mメッシュ)" },
 }
 
+const test_three_layer = new ThreeLayer("test_three_layer", "assets/FBX/LRT.ﾓﾃﾞﾙ1.fbx");
+
 const Mapbox = () => {
     const mapContainer = useRef(null);
     const [mapLoadedFlag, setMapLoadedFlag] = useState(false);
@@ -96,7 +99,8 @@ const Mapbox = () => {
                 container: mapContainer.current,
                 style: 'mapbox://styles/mapbox/light-v10',//'mapbox://styles/mapbox/satellite-streets-v12',// 
                 center: [lng, lat],
-                zoom: zoom
+                zoom: zoom,
+                antialias: true
             });
             // 地図のコントロールを追加
             map.addControl(
@@ -288,8 +292,11 @@ const Mapbox = () => {
             // 建物データの読み込み
             building.add(map);
 
+            test_three_layer.onAdd(map);
+
             await map.once("idle");
 
+            test_three_layer.setAltitude();
             setMapLoadedFlag(true);
 
             // Mapがユーザーによって動かされたとき、緯度経度を更新する。
