@@ -2,24 +2,16 @@ import { lineString, point, featureCollection, nearestPointOnLine, along, lineDi
 import { json } from "d3";
 import { hoge } from "distance"
 import { Clock } from "Clock";
+import mapboxgl from "mapbox-gl";
+import * as THREE from "three"
 
-export class GTFS {
+export class GTFS_3D {
     constructor(folder_path, prefix, gtfs_rt=false) {
         this.folder_path = folder_path;
         this.prefix = prefix;
 
-        // 車両のデータ
-        this.vehicles = new Map();
-        // 車両を描画するレイヤ
-        this.vehicle_layer = null;
-
-        // 最後に車両を描画した時刻
-        this.time = null;
-    }
-
-    async onLoad() {
         // ルートのデータ
-        await json(this.folder_path + "/routes.json").then(data => {
+        json(this.folder_path + "/routes.json").then(data => {
             this.route_layer = featureCollection(
                 data.map((v) => {
                     let { coord } = v;
@@ -36,7 +28,7 @@ export class GTFS {
             );
         });
         // 駅のデータ
-        await json(this.folder_path + "/stops.json").then(data => {
+        json(this.folder_path + "/stops.json").then(data => {
             this.stop_layer = featureCollection(
                 data.map(v => {
                     let { stop_name, coord } = v;
@@ -53,14 +45,125 @@ export class GTFS {
         });
 
         // 時刻表のデータ
-        await json(this.folder_path + "/timetable.json").then(data => {
+        json(this.folder_path + "/timetable.json").then(data => {
             this.timetable = data;
         });
+
+        // 車両のデータ
+        this.vehicles = new Map();
+        this.vehicles_position = [];
+
+        // 最後に車両を描画した時刻
+        this.time = null;
     }
 
     onAdd(map) {
         const me = this;
         me.map = map;
+
+        const geometry = new THREE.SphereGeometry( 5, 12, 12 );
+        const material = new THREE.MeshBasicMaterial( {color: 0xFF0000} );
+
+        // 3Dカスタムレイヤとして定義
+        this.customLayer = {
+            id: me.layer_id,
+            type: 'custom',
+            renderingMode: '3d',
+            onAdd: function (map, gl) {
+                this.camera = new THREE.Camera();
+                this.scene = new THREE.Scene();
+    
+                // create two three.js lights to illuminate the model
+                const directionalLight = new THREE.DirectionalLight(0xffffff);
+                directionalLight.position.set(0, -70, 100).normalize();
+                this.scene.add(directionalLight);
+    
+                const directionalLight2 = new THREE.DirectionalLight(0xffffff);
+                directionalLight2.position.set(0, 70, 100).normalize();
+                this.scene.add(directionalLight2);
+                
+                me.vehicles_position.forEach(x => {
+                    const sphere = new THREE.Mesh( geometry, material );
+
+                    const modelRotate = [Math.PI / 2, 0, 0];
+                    const mercatorCoordinate = mapboxgl.MercatorCoordinate.fromLngLat(
+                        me.modelOrigin, 0
+                    );
+                    // transformation parameters to position, rotate and scale the 3D model onto the map
+                    const modelTransform = {
+                        translateX: mercatorCoordinate.x,
+                        translateY: mercatorCoordinate.y,
+                        translateZ: mercatorCoordinate.z,
+                        rotateX: modelRotate[0],
+                        rotateY: modelRotate[1],
+                        rotateZ: modelRotate[2],
+                        // 3Dモデルは現実世界のメートル単位だが、CustomLayerInterfaceがメルカトル座標での単位を想定しているため、スケール変換を適用する必要がある。
+                        scale: mercatorCoordinate.meterInMercatorCoordinateUnits()
+                    };
+
+                    this.scene.add( sphere );
+                });
+                this.map = map;
+    
+                // use the Mapbox GL JS map canvas for three.js
+                this.renderer = new THREE.WebGLRenderer({
+                    canvas: map.getCanvas(),
+                    context: gl,
+                    antialias: true
+                });
+    
+                this.renderer.autoClear = false;
+            },
+            render: function (gl, matrix) {
+                const rotationX = new THREE.Matrix4().makeRotationAxis(
+                    new THREE.Vector3(1, 0, 0),
+                    modelTransform.rotateX
+                );
+                const rotationY = new THREE.Matrix4().makeRotationAxis(
+                    new THREE.Vector3(0, 1, 0),
+                    modelTransform.rotateY
+                );
+                const rotationZ = new THREE.Matrix4().makeRotationAxis(
+                    new THREE.Vector3(0, 0, 1),
+                    modelTransform.rotateZ
+                );
+    
+                const m = new THREE.Matrix4().fromArray(matrix);
+                const l = new THREE.Matrix4()
+                    .makeTranslation(
+                        modelTransform.translateX,
+                        modelTransform.translateY,
+                        modelTransform.translateZ
+                    )
+                    .scale(
+                        new THREE.Vector3(
+                            modelTransform.scale,
+                            -modelTransform.scale,
+                            modelTransform.scale
+                        )
+                    )
+                    .multiply(rotationX)
+                    .multiply(rotationY)
+                    .multiply(rotationZ);
+    
+                this.camera.projectionMatrix = m.multiply(l);
+                this.renderer.resetState();
+                this.renderer.render(this.scene, this.camera);
+                this.map.triggerRepaint();
+            },
+            setAltitude(){
+                const modelAltitude = Math.floor(map.queryTerrainElevation(me.modelOrigin, {exaggerated: false}));
+                const updateMercatorCoordinate = mapboxgl.MercatorCoordinate.fromLngLat(
+                    me.modelOrigin, modelAltitude
+                );
+                modelTransform.translateX = updateMercatorCoordinate.x;
+                modelTransform.translateY = updateMercatorCoordinate.y;
+                modelTransform.translateZ = updateMercatorCoordinate.z;
+            },
+            animate(){
+
+            }
+        };
 
         map.addSource(me.prefix + "_route", {
             type: "geojson",
@@ -69,10 +172,6 @@ export class GTFS {
         map.addSource(me.prefix + "_stop", {
             type: "geojson",
             data: me.stop_layer
-        });
-        map.addSource(me.prefix + "_vehicle", {
-            type: "geojson",
-            data: me.vehicle_layer
         });
 
         map.addLayer({
@@ -99,18 +198,7 @@ export class GTFS {
                 "circle-pitch-alignment": "map", // カメラの角度に応じて、円の角度を変える。要するに、地面に円が貼り付いている様に見える。
             }
         });
-        map.addLayer({
-            id: me.prefix + "_vehicle",
-            type: "circle",
-            source: me.prefix + "_vehicle",
-            paint: {
-                'circle-color': "#f77",
-                "circle-radius": hoge(4, 6),      // 地図上で半径を4mで固定する。
-                "circle-stroke-color": "#f99",
-                "circle-stroke-width": hoge(1, 1),
-                "circle-pitch-alignment": "map", // カメラの角度に応じて、円の角度を変える。要するに、地面に円が貼り付いている様に見える。
-            }
-        });
+
         map.addLayer({
             id: me.prefix + "_stop_label",
             type: "symbol",
@@ -129,6 +217,9 @@ export class GTFS {
                 "text-size": 14,
             }
         });
+
+        // マップに追加
+        map.addLayer(me.customLayer);
 
         map.on('click', me.prefix + "_vehicle", function (e) {
             const { id } = e.features[0].properties;
@@ -188,20 +279,17 @@ export class GTFS {
     }
 
     animate(){
-        const me = this,
-            {map} = me;
+        const me = this;
         const now = Clock.getDate();
 
         // Mapでmapを使う方法：https://stackoverflow.com/questions/31084619/map-a-javascript-es6-map
-        map.getSource(me.prefix + "_vehicle").setData(
-            featureCollection(
-                Array.from(me.vehicles).map(([, v]) => {
-                    const offset = now.getTime() - v["time"];
-                    v["time"] = now.getTime();
-                    v["distance"] = Math.min(v["distance"] + v["velocity"] * offset, v["line_distance"]);
-                    return along(v["line"], v["distance"], {units: "kilometers"});
-                })
-            )
-        );
+        
+        me.vehicles_position = Array.from(me.vehicles).map(([, v]) => {
+            const offset = now.getTime() - v["time"];
+            v["time"] = now.getTime();
+            v["distance"] = Math.min(v["distance"] + v["velocity"] * offset, v["line_distance"]);
+            return along(v["line"], v["distance"], {units: "kilometers"}).geometry.coordinates;
+        });
+        console.log(me.vehicles_position)
     }
 }

@@ -96,7 +96,7 @@ export class Building {
         me.visibleLayerID = "3d-buildings-MapboxGL";
     }
 
-    add(map) {
+    static add(map) {
         const me = this;
         me.map = map;
 
@@ -121,7 +121,7 @@ export class Building {
         })];
     }
 
-    toggleVisibility(layerID) {
+    static toggleVisibility(layerID) {
         const me = this, { map } = me;
         me.visibleLayerID = layerID;
 

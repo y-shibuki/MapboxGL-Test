@@ -6,8 +6,6 @@ import "css/Map.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLayerGroup, faBuilding, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
-import { point } from '@turf/turf';
-
 import Modal from 'components/Modal';
 import { Clock, ClockComponent } from 'Clock';
 
@@ -18,12 +16,9 @@ import { GTFS } from 'utils/gtfs';
 
 import { Building, BuildingLayerModal } from 'Building';
 
-import station_json from "assets/station.json"
-
 // データの読み込み
 import lrt_route_geojson from "assets/LRT_route_single.geojson";
 import lrt_stop_geojson from "assets/LRT_stop.geojson";
-import population_2020_geojson from "assets/250mメッシュ_栃木県_2020年人口.geojson"
 import { ThreeLayer } from 'utils/ThreeLayer';
 
 // マップボックスのアクセストークン（吉田のアカウント）
@@ -33,7 +28,7 @@ mapboxgl.accessToken = 'pk.eyJ1Ijoic2hpYnVraSIsImEiOiJjbGRhZGJmd28waHNrM29ubjg3c
 const gtfs_list = [
     new GTFS("/assets/kanto_GTFS", "kanto_bus"),
     new GTFS("/assets/ToyamaChitetsu", "toyama_chitetsu"),
-];
+];;
 
 const lrtVehiclePositionLayer = {
     'type': 'FeatureCollection',
@@ -53,22 +48,17 @@ const route = [[139.899260236867036, 36.559057305578094], [139.899215692827994, 
 
 let fuga;
 
-const building = new Building();
-
 let map;
-
-let station_layer = {
-    'type': 'FeatureCollection',
-    'features': []
-};
 
 let station_data = {}
 
 const gairozyu_points = [[ 139.899381033625104, 36.558608059722616 ], [ 139.899436668852786, 36.558604050050533 ], [ 139.899492304074727, 36.558600040352516 ], [ 139.899547939290841, 36.558596030628543 ], [ 139.899603574501185, 36.558592020878606 ], [ 139.899659209705732, 36.558588011102714 ], [ 139.89971484490448, 36.558584001300865 ], [ 139.899379928037803, 36.558589264738259 ], [ 139.899435580623646, 36.558585415159584 ], [ 139.899491233203946, 36.558581565554917 ], [ 139.899546885778648, 36.558577715924294 ], [ 139.899602538347807, 36.558573866267707 ], [ 139.899658190911424, 36.558570016585129 ], [ 139.899713843469442, 36.558566166876588 ]];
 
-const test_three_layer = gairozyu_points.map((p, idx) => {
+const test_three_layer = [];
+/*
+gairozyu_points.map((p, idx) => {
     return new ThreeLayer("gairozyu_" + idx.toString(), "assets/FBX/Gledista_Triacanthos.fbx", p, 0.001)
-});
+});*/
 
 const Mapbox = () => {
     const mapContainer = useRef(null);
@@ -208,38 +198,10 @@ const Mapbox = () => {
                 }
             });
 
-            gtfs_list.forEach(x => { x.onAdd(map); });
-
-            /** 電車の駅を読み込む **/
-            /* あとで別ファイルに切り分け */
-            const loadStationData = (datas) => {
-                for (const data of datas) {
-                    station_layer.features.push(point(data.coord, { id: data.id }));
-                    station_data[data.id] = {
-                        lngLat: { lng: data.coord[0], lat: data.coord[1] },
-                        railway: data.railway
-                    }
-                }
-                map.addSource("station", {
-                    type: "geojson",
-                    data: station_layer
-                });
-
-                map.addLayer({
-                    id: "station",
-                    type: "circle",
-                    source: "station",
-                    paint: {
-                        'circle-color': "#ffffff",
-                        "circle-radius": hoge(12, 6),      // 地図上で半径を12mで固定する。
-                        "circle-stroke-color": "#000000",
-                        "circle-stroke-width": hoge(2, 1),
-                        "circle-pitch-alignment": "map", // カメラの角度に応じて、円の角度を変える。要するに、地面に円が貼り付いている様に見える。
-                    }
-                });
-            }
-
-            loadStationData(station_json);
+            gtfs_list.forEach(async (x) => {
+                await x.onLoad();
+                x.onAdd(map);
+            });
 
             map.on('click', 'station', function (e) {
                 const { id } = e.features[0].properties,
@@ -258,7 +220,7 @@ const Mapbox = () => {
             });
 
             // 建物データの読み込み
-            building.add(map);
+            Building.add(map);
 
             test_three_layer.forEach(x => {
                 x.onAdd(map)
@@ -286,9 +248,7 @@ const Mapbox = () => {
             d.setHours(10);
             Clock.setDate(d);
 
-            gtfs_list.forEach(x => {
-                x.onTick();
-            });
+            gtfs_list.forEach(x => { x.onTick(); });
 
             // アニメーションを開始
             reqIdRef.current = requestAnimationFrame(animate);
@@ -307,9 +267,7 @@ const Mapbox = () => {
         const [id, point] = fuga.animate();
         map.getSource(id).setData(point);
 
-        gtfs_list.forEach(x => {
-            x.animate();
-        });
+        gtfs_list.forEach(x => { x.animate();});
 
         reqIdRef.current = requestAnimationFrame(animate);
     }
@@ -319,7 +277,7 @@ const Mapbox = () => {
     useEffect(() => {
         if (!mapLoadedFlag) return;
 
-        building.toggleVisibility(visibleBuildingLayerID);
+        Building.toggleVisibility(visibleBuildingLayerID);
     }, [mapLoadedFlag, visibleBuildingLayerID]);
 
 
